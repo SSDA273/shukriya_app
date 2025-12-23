@@ -1,0 +1,33 @@
+
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:unitey_app/constant/api_const/app_api.dart';
+import 'package:unitey_app/constant/global_manager.dart';
+import 'package:unitey_app/core/interceptor/app_dio.dart';
+
+class EntityInfoAPI {
+  Future getEntityInfo() async {
+    String subUrl = "/customer/entity_info";
+    String uri = AppAPI.baseUrl + subUrl;
+    final bodyData = json.encode({
+      "entity_id": GlobalData.entityId,
+      "entity_key": GlobalData.entityKey
+    });
+    final response = await Api().dio.post(
+      uri,
+      data: bodyData,
+      options: Options(
+        // headers: {"accept": "*/*'", "content-type": "application/json"},
+        contentType: 'application/json',
+      ),
+    );
+
+    final statusCode = response.statusCode;
+
+    final body = response.data;
+    if (statusCode == 201 || statusCode == 200) {
+      return body;
+    }
+  }
+}

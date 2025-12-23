@@ -1,0 +1,107 @@
+name: unitey_app
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_smartlook: ^4.1.0
+  flutter_secure_storage: ^10.0.0
+  local_auth: ^2.1.0
+  provider: ^6.0.2
+  dio: ^4.0.4
+  image_picker: ^0.8.5+3
+  flutter_inappwebview: ^6.0.0
+  url_launcher: ^6.0.17
+  qr_flutter: ^4.0.0
+  country_currency_pickers: ^2.0.0
+  json_annotation: ^4.4.0
+  connectivity_plus: ^7.0.0
+  flutter_slidable: ^1.2.0
+  intl: 0.20.2
+  jwt_decoder: ^2.0.1
+  app_settings: ^7.0.0
+
+  flutter_screenutil: ^5.5.2
+  screenshot: ^1.2.3
+  share_plus: ^12.0.0
+  path_provider: ^2.0.8
+  camera: ^0.10.0 
+  dotted_border: ^2.0.0+2
+  flutter_svg: ^1.0.3
+
+  lottie: ^3.3.2
+
+  flutter_hooks: ^0.18.2+1
+  flutter_swipe_button: ^1.1.0
+  scrollable_positioned_list: ^0.2.3
+  expandable: ^5.0.1
+  pin_code_fields: ^8.0.0
+
+  firebase_messaging: ^14.7.10
+  firebase_core: ^2.32.0
+  overlay_support: ^2.0.1
+
+  flutter_native_splash: ^2.4.7
+
+# ✅ FLUTTER NATIVE SPLASH CONFIG
+flutter_native_splash:
+  color: "#E8F5E9"
+  image: assets/images/app_logo.png
+
+  color_dark: "#C8E6C9"
+  image_dark: assets/images/al_razouki_logo_white.png
+
+  android_12:
+    image: assets/images/app_logo.png
+    color: "#E0F2F1"
+    icon_background_color: "#E0F2F1"
+
+  web_image_mode: center
+  android_gravity: center
+  ios_content_mode: center
+  fullscreen: true
+
+# ✅ APP ICON CONFIG (ADDED — NOTHING ELSE TOUCHED)
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/images/app_logo.png
+  remove_alpha_ios: true
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  json_serializable: ^6.1.4
+  build_runner: ^2.1.7
+  change_app_package_name: ^1.1.0
+
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/json/
+
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Bold.ttf
+
+flutter_intl:
+  enabled: true

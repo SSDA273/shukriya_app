@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "306476268306",
+    "project_id": "shukria-app",
+    "storage_bucket": "shukria-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306476268306:android:e7ea6132774064462fd1cb",
+        "android_client_info": {
+          "package_name": "com.user.shukria_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306476268306-t8po2o9amnehu63qfce40flrh006892t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsHxKWaLDIo-H_LHOAjmMYISyHBDoYsCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306476268306-t8po2o9amnehu63qfce40flrh006892t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
