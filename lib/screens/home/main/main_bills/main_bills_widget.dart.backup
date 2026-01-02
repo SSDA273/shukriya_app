@@ -150,7 +150,7 @@ class MainBillsWidget extends StatelessWidget {
                         // todo: dynamic textfield
                         // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PayBillerScreen(
                         //   productModel: data.getBillersList!.result![index].productId!,
-                        //   title: data.getBillersList!.result![index].billerName.toString()));
+                        //   title: data.getBillersList!.result![index].billerName.toString())));
                         if (product.configurations!.shortcode ==
                             'MBR') {
                           print(data.getBillersList!.result![index].serviceID);

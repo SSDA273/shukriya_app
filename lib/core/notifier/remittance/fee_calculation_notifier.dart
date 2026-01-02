@@ -9,6 +9,7 @@ class FeeCalculationNotifier extends ChangeNotifier {
   String _totalFee="0.00";
   String _vatAmount="0.00";
   String _agentFee="0.00";
+  String _receiveAmount="0.00";
   bool _isLoading = false;
   // int _totalShiftLength = 0;
   bool get getIsLoading => _isLoading;
@@ -16,22 +17,36 @@ class FeeCalculationNotifier extends ChangeNotifier {
   String get getTotalFee => _totalFee;
   String get getVATAmount => _vatAmount;
   String get getAgentFee => _agentFee;
+  String get getReceiveAmount => _receiveAmount;
 
   Future<void> getRemittanceFee({
     required BuildContext context,
-    required  String feeFxId,
+    required String feeFxId,
     required num amount,
     required String commissionType,
+    required String fromCurrency,
+    required String toCurrency,
+    required String serviceId,
+    required String toCountry
   }) async {
     try {
       _isLoading = true;
       notifyListeners();
-      final detailsData = await _feeCalculationAPI.getTotalRemittanceFee(feeFxId: feeFxId, amount: amount,commissionType:commissionType);
+      final detailsData = await _feeCalculationAPI.getTotalRemittanceFee(
+        feeFxId: feeFxId,
+        amount: amount,
+        commissionType: commissionType,
+        fromCurrency: fromCurrency,
+        toCurrency: toCurrency,
+        serviceId: serviceId,
+        toCountry: toCountry
+      );
       final statusCode = detailsData['statusCode'];
       if(statusCode == 200){
         if(commissionType == "customer"){
           _totalFee = detailsData['result']['total_fees'];
           _vatAmount = detailsData['result']['vat_amount'];
+          _receiveAmount = detailsData['result']['receive_amount'];
           _isLoading = false;
           notifyListeners();
         }else{

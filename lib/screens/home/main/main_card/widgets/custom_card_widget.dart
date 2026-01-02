@@ -24,7 +24,8 @@ class CardWidget extends StatelessWidget {
       height: 184.h,
       width: 328.w,
       decoration: BoxDecoration(
-        color: ColorManager.primary,
+        //color: ColorManager.primary,prvious color
+        color: const Color(0xffCDDC39),
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
             image: AssetImage("assets/images/c.jpg"), fit: BoxFit.cover),
@@ -43,7 +44,7 @@ class CardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Image.asset(
-                          "assets/images/fardan.png",
+                          "assets/images/AlExchange.png",
                           width: 130,
                         ),
                         SvgPicture.asset(

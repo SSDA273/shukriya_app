@@ -27,7 +27,14 @@ class MainCardWidget extends StatelessWidget {
         Container(
           height: 360.h,
           decoration: const BoxDecoration(
-            color: Color(0xff2f1733),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 125, 180, 226),
+                Color(0xffC5E1A5),
+              ],
+            ),
             borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(40),
               bottomLeft: Radius.circular(40),

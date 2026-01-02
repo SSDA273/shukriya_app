@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/flutter_camera.dart';
+// import 'package:flutter_camera/flutter_camera.dart';  // Commented out - package not in pubspec
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:unitey_app/constant/color_manger.dart';
 import 'package:unitey_app/constant/constants.dart';

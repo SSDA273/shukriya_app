@@ -92,8 +92,8 @@ class BeneficiarySelectNotifier extends ChangeNotifier {
 
   num get getReceiveAmount => _receiveAmount;
 
-  set setReceiveAmount (fee){
-    _receiveAmount = (fee + _sendAmount) * _exchangeRate;
+  set setReceiveAmount (receivedAmount){
+    _receiveAmount = receivedAmount;
     notifyListeners();
   }
 

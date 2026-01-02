@@ -22,7 +22,6 @@ class CurrencyListNotifier extends ChangeNotifier {
       final listData = await _currencyListAPI.getCurrencyList();
       _currencyListModel = CurrencyListModel.fromJson(listData);
       _totalCurrencyLength = _currencyListModel!.result!.length;
-      print("length $_totalCurrencyLength");
       isLoading = false;
       notifyListeners();
     }catch(error){
