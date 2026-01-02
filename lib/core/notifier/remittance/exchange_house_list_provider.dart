@@ -12,6 +12,7 @@ class ExchangeHouseListNotifier extends ChangeNotifier {
   bool _isResultAvailable=true;
   String? exchangeHouseName;
   String? serviceId;
+  String? _toCountry = 'IN';
   num? flatFee;
 
   num? selectedExchangeRate;
@@ -21,6 +22,7 @@ class ExchangeHouseListNotifier extends ChangeNotifier {
 
   int get getTotalLength => _totalExchangeHouseLength;
   bool get getIsResultIsEmpty => _isResultAvailable;
+  String? get getToCountry => _toCountry;
   ExchangeProductModel? _productModel;
   ExchangeHouseModel? get getExchangeHouseModel => _exchangeHouseModel;
   ExchangeProductModel? get getProductModel => _productModel;
@@ -53,14 +55,36 @@ flatFee =productModel.fee!.feeFlat;
       isLoading = true;
       notifyListeners();
       
+      // Determine toCountry based on currency
+      switch (toCurrency) {
+        case 'INR':
+          _toCountry = 'IN';
+          break;
+        case 'PKR':
+          _toCountry = 'PK';
+          break;
+        case 'PHP':
+          _toCountry = 'PH';
+          break;
+        case 'BDT':
+          _toCountry = 'BD';
+          break;
+        default:
+          _toCountry = 'IN';
+      }
+      
       final listData = await _exchangeHouseListAPI.getExchangeHouseList(fromCurrency: fromCurrency, toCurrency: toCurrency);
       
       if (listData != null) {
         // Handle both single object and array responses from the API
         Map<String, dynamic> processedData = Map<String, dynamic>.from(listData);
         if (processedData['result'] != null && processedData['result'] is Map) {
-          // If result is a single object, wrap it in an array
-          processedData['result'] = [processedData['result']];
+          // If result is a single object (current API response), extract serviceId
+          final resultObj = processedData['result'] as Map<String, dynamic>;
+          // Use service_id from current API structure
+          serviceId = resultObj['service_id']?.toString();
+          // Wrap in array for model compatibility
+          processedData['result'] = [resultObj];
         }
         
         _exchangeHouseModel = ExchangeHouseModel.fromJson(processedData);
