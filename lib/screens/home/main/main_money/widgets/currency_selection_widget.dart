@@ -14,6 +14,7 @@ import '../../../../../core/notifier/remittance/exchange_house_list_provider.dar
 import '../../../../../core/notifier/remittance/fee_calculation_notifier.dart';
 import '../../../../../provider/beneficiary_select_notifier.dart';
 import '../../../../../widgets/circular_indicator_widget.dart';
+import 'flag_image_widget.dart';
 
 class CurrencySelectionWidget extends HookWidget {
   const CurrencySelectionWidget({Key? key}) : super(key: key);
@@ -110,7 +111,7 @@ class CurrencySelectionWidget extends HookWidget {
                               contentPadding:
                               const EdgeInsets.fromLTRB(0, 0, 10, 0),
                               prefixIconConstraints:
-                              const BoxConstraints(minWidth: 50),
+                              const BoxConstraints(minWidth: 65, minHeight: 50),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(4.0)),
@@ -125,13 +126,12 @@ class CurrencySelectionWidget extends HookWidget {
                                 borderSide:
                                 BorderSide(color: ColorManager.grey5),
                               ),
-                              prefixIcon: Transform.scale(
-                                scale: 1.8,
-                                child: Image.network(fromImage.value.isEmpty
+                              prefixIcon: FlagImageWidget(
+                                imageUrl: fromImage.value.isEmpty
                                     ? snapshot.getCurrencyModel!.result![2]
                                     .countryFlag
                                     .toString()
-                                    : fromCurrencyImage),
+                                    : fromCurrencyImage,
                               ),
                             ),
                             // hint: Text(
@@ -248,7 +248,7 @@ class CurrencySelectionWidget extends HookWidget {
                                 contentPadding:
                                 const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 prefixIconConstraints:
-                                const BoxConstraints(minWidth: 50),
+                                const BoxConstraints(minWidth: 65, minHeight: 50),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(4.0)),
@@ -264,15 +264,12 @@ class CurrencySelectionWidget extends HookWidget {
                                   BorderSide(color: ColorManager.grey5),
                                 ),
                                 // prefixIconConstraints: BoxConstraints(maxWidth: 45,minWidth: 40),
-                                prefixIcon: Transform.scale(
-                                  scale: 1.8,
-                                  child: Image.network(
-                                    toImage.value.isEmpty
-                                        ? snapshot.getCurrencyModel!
-                                        .result![0].countryFlag
-                                        .toString()
-                                        : toCurrencyImage,
-                                  ),
+                                prefixIcon: FlagImageWidget(
+                                  imageUrl: toImage.value.isEmpty
+                                      ? snapshot.getCurrencyModel!
+                                      .result![0].countryFlag
+                                      .toString()
+                                      : toCurrencyImage,
                                 )),
                             // hint: Text(
                             //     toCode.value.isEmpty
@@ -365,24 +362,28 @@ class CurrencySelectionWidget extends HookWidget {
                             double.parse(value),
                             getExchangesNotifier.getProductModel!,
                           );
-                          await feeCalculation.getRemittanceFee(context: context,
+                          await feeCalculation.getRemittanceFee(
+                              context: context,
                               feeFxId: selectedBeneficiary.getFeeFxID!,
                               amount: selectedBeneficiary.getSendAmount,
-                              commissionType:"customer");
-                          selectedBeneficiary.setReceiveAmount=double.parse(feeCalculation.getTotalFee);
+                              commissionType: "customer",
+                              fromCurrency: fromCode.value.isEmpty ? "AED" : fromCode.value,
+                              toCurrency: toCode.value.isEmpty ? "INR" : toCode.value,
+                              serviceId: getExchangesNotifier.serviceId ?? "",
+                              toCountry: getExchangesNotifier.getToCountry ?? "IN");
+                          selectedBeneficiary.setReceiveAmount=double.parse(feeCalculation.getReceiveAmount);
                           selectedBeneficiary.setTransferFee =double.parse(feeCalculation.getTotalFee);
-                          receiveMoneyController.text = amountFormatter.format(selectedBeneficiary.getReceiveAmount);
+                          if (selectedBeneficiary.getReceiveAmount <= 0) {
+                            receiveMoneyController.text = "";
+                          } else {
+                            receiveMoneyController.text = selectedBeneficiary
+                                .getReceiveAmount
+                                .toStringAsFixed(2);
+                          }
                         }else{
                           receiveMoneyController.text="0.00";
                           selectedBeneficiary.setTransferFee =0.00;
                         }
-                        // if (selectedBeneficiary.getReceiveAmount <= 0) {
-                        //   receiveMoneyController.text = "";
-                        // } else {
-                        //   receiveMoneyController.text = selectedBeneficiary
-                        //       .getReceiveAmount
-                        //       .toStringAsFixed(2);
-                        // }
                       },
 
                       prefix: Padding(
