@@ -27,7 +27,8 @@ class AuthInterceptor extends Interceptor {
 
     final token = await cacheService.readCache(key: "token");
     
-    print("🔑 AuthInterceptor - Token: ${token != null ? 'Present (${token.length} chars)' : 'NULL'}");
+    // print("🔑 AuthInterceptor - Token: ${token != null ? 'Present (${token.length} chars)' : 'NULL'}");        print("🔑 AuthInterceptor - Token: ${token != null ? 'Present (${token.length} chars)\n Token: $token' : 'NULL'}");
+
     print("🔑 AuthInterceptor - Request URL: ${options.path}");
     
     if (token != null) {
