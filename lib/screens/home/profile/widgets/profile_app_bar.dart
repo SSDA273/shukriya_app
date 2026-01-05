@@ -29,7 +29,15 @@ class ProfileAppBar extends StatelessWidget {
         Container(
           height: 167.h,
           decoration: const BoxDecoration(
-            color: Color(0xff2f1733),
+            //color: Color(0xff2f1733),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 240, 166, 247),
+                Color(0xffC5E1A5),
+              ],
+            ),
             borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(24),
               bottomLeft: Radius.circular(24),
@@ -86,7 +94,7 @@ class ProfileAppBar extends StatelessWidget {
                         color: ColorManager.secondaryDark,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.white38,
+                            color: const Color.fromARGB(255, 255, 255, 255),
                             spreadRadius: 1,
                             blurRadius: 15
                           )
@@ -99,10 +107,15 @@ class ProfileAppBar extends StatelessWidget {
                         ),
                       ),
                       child: (profileNotifier.getCustomerImage ?? '').isEmpty
-                          ? SvgPicture.asset(
-                              ImageAssets.profile,
-                              height: 15.15,
-                              width: 11.65,
+                          ? Center(
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: SvgPicture.asset(
+                                  ImageAssets.profile,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             )
                           : null,
                     ),
@@ -119,7 +132,7 @@ class ProfileAppBar extends StatelessWidget {
                         kSizedBox5,
                         Text((profileNotifier.getCustomerNumber ?? '').maskNumber((profileNotifier.getCustomerNumber ?? '').length),
                           style: getRegularStyle(
-                            color: ColorManager.grey5,
+                            color: ColorManager.white,
                           ),
                         ),
                         kSizedBox8,
@@ -150,13 +163,26 @@ class ProfileAppBar extends StatelessWidget {
                    const Spacer(),
                     Column(
                       children: [
+                        // InkWell(
+                        //   splashColor: Colors.transparent,
+                        //   onTap: ()=>showFrontModel(context),
+                        //     child: SvgPicture.asset(ImageAssets.editIc)),
+                        // Text(
+                        //   "Edit",
+                        //   style: getRegularStyle(color: ColorManager.white,fontSize: FontSize.s12),
+                        // )
                         InkWell(
-                          splashColor: Colors.transparent,
-                          onTap: ()=>showFrontModel(context),
-                            child: SvgPicture.asset(ImageAssets.editIc)),
-                        Text(
-                          "Edit",
-                          style: getRegularStyle(color: ColorManager.grey4),
+                        splashColor: Colors.transparent,
+                        onTap: () => showFrontModel(context),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(ImageAssets.editIc),
+                            Text(
+                              "Edit",
+                              style: getRegularStyle(color: ColorManager.white,fontSize: FontSize.s12),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     )
@@ -188,7 +214,7 @@ class ProfileAppBar extends StatelessWidget {
                     children: [
                       Text("Edit Profile",
                       style: getSemiBoldStyle(color: ColorManager.black,fontSize: FontSize.s18),),
-                      IconButton(onPressed: (){}, icon: Icon(Icons.close_rounded))
+                      IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close_rounded))
                     ],
                   ),
                 ),

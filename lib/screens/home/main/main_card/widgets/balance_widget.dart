@@ -31,7 +31,8 @@ class BalanceWidget extends StatelessWidget {
                     style: getRegularStyle(color:const  Color(0xFFA262A5),fontSize: FontSize.s14)),
                 TextSpan(
                     text: subText,
-                    style:style?? getBoldStyle(color: const Color(0xFFF4B277),fontSize: FontSize.s28,)),
+                    //style:style?? getBoldStyle(color: const Color(0xFFF4B277),fontSize: FontSize.s28,)
+                    style:style?? getBoldStyle(color: const Color(0xFFFFFFFF),fontSize: FontSize.s28,)),
               ])),
           Icon(
                 Icons.arrow_forward_ios,

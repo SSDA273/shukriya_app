@@ -31,7 +31,7 @@ class MainCardWidget extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color.fromARGB(255, 125, 180, 226),
+                Color.fromARGB(255, 240, 166, 247),
                 Color(0xffC5E1A5),
               ],
             ),

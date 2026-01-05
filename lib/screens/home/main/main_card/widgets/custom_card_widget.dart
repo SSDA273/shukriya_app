@@ -44,7 +44,7 @@ class CardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Image.asset(
-                          "assets/images/AlExchange.png",
+                          "assets/images/al_razouki_card_logo_white.png",
                           width: 130,
                         ),
                         SvgPicture.asset(

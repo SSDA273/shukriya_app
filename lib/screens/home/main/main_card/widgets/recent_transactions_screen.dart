@@ -93,7 +93,8 @@ class MailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      // height: 100,  //uncommented by SMNT for dynamic height adjustment (5 jan 2026)
+      constraints: const BoxConstraints(minHeight: 80),
       width: double.infinity,
       decoration: BoxDecoration(
         color: _color,
@@ -112,10 +113,13 @@ class MailCard extends StatelessWidget {
 
           Expanded(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start, //new line added by SMNT, for dynamic height adjustment (5 jan 2026)
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   _title,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 15
@@ -126,7 +130,7 @@ class MailCard extends StatelessWidget {
                     color: Colors.black38,
                       fontSize: 13
                   ),),
-                SizedBox(height: 5),
+                SizedBox(height: 8),//changes done by SMNT 5-->8 , (5 jan 2026)
                 Text(_description,
                   style: TextStyle(
                       fontSize: 13
@@ -135,7 +139,8 @@ class MailCard extends StatelessWidget {
             ),
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            //mainAxisAlignment: MainAxisAlignment.start,//changes by SMNT for dynamic height adjustment(5 jan 2026)
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(

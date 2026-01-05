@@ -62,7 +62,8 @@ class ImageAssets {
   static const String scanAndPayIc = "$iconPath/scanAndPayIc.svg";
 
   //Profile Screen
-  static const String editIc = "$iconPath/edit.svg";
+  //static const String editIc = "$iconPath/edit.svg";
+  static const String editIc = "$iconPath/edit_black.svg";
   static const String recurringIc = "$iconPath/recurringIc.svg";
   static const String manageIc = "$iconPath/manageIc.svg";
   static const String aboutIc = "$iconPath/about.svg";

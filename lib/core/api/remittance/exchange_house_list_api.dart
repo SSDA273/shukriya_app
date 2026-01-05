@@ -40,7 +40,7 @@ class ExchangeHouseListAPI {
         "to_country": toCountry,
         "modeOfTransfer": "BANK", // Changed from MOBILE to BANK as per backend team requirement
         "from_currency": fromCurrency,
-        "to_currency": toCurrency,
+        "to_currency": toCurrency
       });
       final response = await Api().dio.post(
         uri,
