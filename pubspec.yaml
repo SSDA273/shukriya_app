@@ -63,7 +63,7 @@ flutter_native_splash:
   image_dark: assets/images/al_razouki_logo_white.png
 
   android_12:
-    image: assets/images/app_logo_android12_centered_safe.png
+    image: assets/images/native_logo.png
     color: "7FBFB3"
     icon_background_color: "#e1eded"
 

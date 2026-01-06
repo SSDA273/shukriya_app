@@ -16,11 +16,20 @@ class FingerPrintScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: //Color(0xFF491152),
-      Color(0xFF0B1C2D),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              //HexColor.fromHex("#1cd475"),
+              ColorManager.primary,
+              ColorManager.darkPrimary,
+            ],
+          ),
+        ),
         child: Stack(
           children: [
             Positioned(
