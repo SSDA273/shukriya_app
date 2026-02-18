@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 <!--    <uses-permission android:name="android.permission.NFC" />-->
    <application
-        android:label="Al Razouki Exchange"
+        android:label="AL Ghurair Exchange"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">

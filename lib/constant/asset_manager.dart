@@ -52,8 +52,8 @@ class ImageAssets {
   static const String cardChip = "$iconPath/cardChip.svg";
   static const String cardMask = "$imagePath/cardMask.svg";
   static const String splashLogo = "$imagePath/splash_logo.png";
-  static const String alRazoukiLogo = "$imagePath/al_razouki_logo.png";
-  static const String alRazoukiLogoWhite = "$imagePath/al_razouki_logo_white.png";
+  static const String alGhurairLogo = "$imagePath/al_ghurair_logo.png";
+  static const String alGhurairLogoWhite = "$imagePath/al_ghurair_logo_white.png";
 
   static const String cardDemo = "$imagePath/card_demo.png";
   static const String rewardPointsIc = "$iconPath/rewardPointsIc.svg";

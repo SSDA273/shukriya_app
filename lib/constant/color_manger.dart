@@ -31,7 +31,7 @@ class ColorManager {
   static  Color backgroundColor = HexColor.fromHex("#F8F9FD");
   static Color filledColor = HexColor.fromHex("#F5F6FA");
 
-  //Al Razouki Brand Colors
+  //AL Ghurair Brand Colors
   static Color brandPurple = HexColor.fromHex("#BA68C8");
   static Color darkGrey = HexColor.fromHex("#525252");
   static Color brandGreen = HexColor.fromHex("#8BC34A");

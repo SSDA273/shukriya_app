@@ -12,6 +12,7 @@ import '../../../../../constant/style_manager.dart';
 import '../../../../../core/notifier/customer/customer_profile_notifier.dart';
 import '../../../../../generated/l10n.dart';
 import '../../../../../widgets/circular_indicator_widget.dart';
+import '../../../../../widgets/biller_image_widget.dart';
 
 class AppBarWidget extends StatelessWidget {
   const AppBarWidget({

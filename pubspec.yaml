@@ -57,7 +57,7 @@ dependencies:
 # ✅ FLUTTER NATIVE SPLASH CONFIG
 flutter_native_splash:
   color: "#F3E5F5"
-  image: assets/images/al_razouki_logo.png
+  image: assets/images/al_ghurair_logo.png
 
   color_dark: "#F3E5F5"
   image_dark: assets/images/splash_screen_logo.png
@@ -76,7 +76,7 @@ flutter_native_splash:
 flutter_icons:
   android: true
   ios: true
-  image_path: assets/images/al_razouki_logo.png
+  image_path: assets/images/al_ghurair_logo.png
   remove_alpha_ios: true
 
 dev_dependencies:

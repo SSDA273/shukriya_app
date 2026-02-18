@@ -7,7 +7,7 @@ import 'font_manager.dart';
 
 ThemeData getApplicationTheme() {
   return ThemeData(
-      // main colors of the app - Al Razouki branding
+      // main colors of the app - AL Ghurair branding
       primaryColor: ColorManager.primary,
       primaryColorLight: ColorManager.quaternary,
       primaryColorDark: ColorManager.darkPrimary,
@@ -22,7 +22,7 @@ ThemeData getApplicationTheme() {
           color: ColorManager.white,
           shadowColor: ColorManager.grey,
           elevation: AppSize.s4),
-      // App bar theme - Al Razouki branding
+      // App bar theme - AL Ghurair branding
       appBarTheme: AppBarTheme(
           centerTitle: true,
           color: ColorManager.primary,
@@ -38,11 +38,11 @@ ThemeData getApplicationTheme() {
           buttonColor: ColorManager.primary,
           splashColor: ColorManager.primaryOpacity70),
 
-      // elevated button theme - Al Razouki branding
+      // elevated button theme - AL Ghurair branding
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
               textStyle: getRegularStyle(color: ColorManager.white),
-              backgroundColor: ColorManager.secondary, // Al Razouki green
+              backgroundColor: ColorManager.secondary, // AL Ghurair green
               foregroundColor: ColorManager.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppSize.s8)))),

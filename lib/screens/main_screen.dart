@@ -73,7 +73,7 @@ class _MainScreenState extends State<MainScreen> {
             return PushNotificationCustomWidget(
               title: _pushNotificationModel?.title ?? '',
               body: _pushNotificationModel?.body ?? '',
-              leading: Image.asset("assets/images/al_razouki_logo.png"),
+              leading: Image.asset("assets/images/al_ghurair_logo.png"),
               onReplay: () {
                 OverlaySupportEntry.of(context)
                     ?.dismiss(); //use OverlaySupportEntry to dismiss overlay
