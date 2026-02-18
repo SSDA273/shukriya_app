@@ -8,6 +8,7 @@ class BillerImage extends StatelessWidget {
   final double? height;
   final double? width;
   final BoxFit fit;
+  final Color? backgroundColor;
 
   const BillerImage({
     Key? key,
@@ -16,6 +17,7 @@ class BillerImage extends StatelessWidget {
     this.height,
     this.width,
     this.fit = BoxFit.contain,
+    this.backgroundColor,
   }) : super(key: key);
 
   Widget _buildFallback() {
@@ -42,7 +44,7 @@ class BillerImage extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: backgroundColor ?? Colors.grey.shade200,
         shape: BoxShape.circle,
       ),
       child: Center(child: fallbackWidget),

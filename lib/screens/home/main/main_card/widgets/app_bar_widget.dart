@@ -33,19 +33,16 @@ class AppBarWidget extends StatelessWidget {
                     :  Row(
                       children: [
                         InkWell(
-                          onTap:()=>Navigator.pushNamed(context, profileRoute),
-                          child: CircleAvatar(
-                            backgroundColor: const Color(0xFFFD5BAA).withOpacity(0.4),
-                            radius: 18,
-                          //todo:Uncomment when API integration start
-                            backgroundImage: (data.getCustomerImage ?? '').isEmpty ?null:NetworkImage(
-                              "${AppAPI.baseUrl}/files?key=${data.getCustomerImage}",
+                          onTap: () => Navigator.pushNamed(context, profileRoute),
+                          child: ClipOval(
+                            child: BillerImage(
+                              imageKey: data.getCustomerImage,
+                              fallbackAsset: ImageAssets.profile,
+                              height: 36,
+                              width: 36,
+                              fit: BoxFit.cover,
+                              backgroundColor: const Color(0xFFFD5BAA).withOpacity(0.4),
                             ),
-                            child: (data.getCustomerImage ?? '').isEmpty ?SvgPicture.asset(
-                  ImageAssets.profile,
-                  height: 15.15,
-                  width: 11.65,
-                ): null,
                           ),
                         ),
                 // child: SvgPicture.asset(
