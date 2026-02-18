@@ -14,6 +14,7 @@ import '../../../../core/notifier/billers/billers_list_notifier.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../provider/biller_select_notifier.dart';
 import '../../../../widgets/circular_indicator_widget.dart';
+import '../../../../widgets/biller_image_widget.dart';
 import '../../pay_bills/pay_bill_amount_screen.dart';
 
 class MainBillsWidget extends StatelessWidget {
@@ -117,7 +118,11 @@ class MainBillsWidget extends StatelessWidget {
                                   borderRadius:BorderRadius.circular(12),
                                     color: ColorManager.white
                                 ),
-                                child: Image.network("${AppAPI.baseUrl}/files?key=${bills.logo}"),
+                                child: BillerImage(
+                                  imageKey: bills.logo,
+                                  height: 40.w,
+                                  width: 40.w,
+                                ),
                               ),
                               kSizedBox5,
                               SizedBox(
@@ -188,19 +193,11 @@ class MainBillsWidget extends StatelessWidget {
                         // width: 72.w, Todo:uncomment when you want particular width
                         child: Column(
                           children: [
-                            Container(
+                            BillerImage(
+                              imageKey: data.getBillersList!.result![index].productId!.logo,
                               height: 73.h,
                               width: 72.w,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: Color(0xFFCFCFCF),
-                                      width: 1),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        "${AppAPI.baseUrl}/files?key=${data.getBillersList!.result![index].productId!.logo.toString()}"),
-                                  )),
+                              fit: BoxFit.cover,
                             ),
                             const SizedBox(
                               height: 6,

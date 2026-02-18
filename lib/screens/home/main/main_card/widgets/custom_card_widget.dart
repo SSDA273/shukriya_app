@@ -20,81 +20,45 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: AppMargin.m16, right: AppMargin.m16),
-      height: 184.h,
-      width: 328.w,
+      margin: const EdgeInsets.symmetric(horizontal: AppMargin.m16),
+      height: 200.h,
+      width: 350.w,
       decoration: BoxDecoration(
-        color: ColorManager.primary,
         borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(
-            image: AssetImage("assets/images/c.jpg"), fit: BoxFit.cover),
+        image: const DecorationImage(
+            image: AssetImage(ImageAssets.cardDemo), fit: BoxFit.fill),
       ),
       child:
           Consumer<AccountDetailsNotifier>(builder: (context, snapshot, child) {
-        return snapshot.isLoading == true
-            ? const Center(child: CircularIndicatorWidget())
-            : Padding(
-                padding: const EdgeInsets.fromLTRB(AppPadding.p20,
-                    AppPadding.p24, AppPadding.p20, AppPadding.p20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/images/fardan.png",
-                          width: 130,
-                        ),
-                        SvgPicture.asset(
-                          ImageAssets.cardChip,
-                          height: 29.h,
-                          width: 42.w,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                  text:
-                                      "${snapshot.getAccountDetailsModel!.result!.data.accountNumberLast4} \n",
-                                  style: Theme.of(context).textTheme.titleMedium),
-                              TextSpan(
-                                  text: snapshot.getAccountDetailsModel!.result!
-                                      .data.accountName,
-                                  style: getRegularStyle(
-                                      color: ColorManager.white,
-                                      fontSize: FontSize.s16))
-                            ],
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Image.asset(
-                              "assets/images/mercury.jpeg",
-                              width: 35,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              snapshot
-                                  .getAccountDetailsModel!.result!.data.expiry,
-                              style: getRegularStyle(
-                                  color: ColorManager.white,
-                                  fontSize: FontSize.s14),
-                            )
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
+        if (snapshot.isLoading == true) {
+          return const Center(child: CircularIndicatorWidget());
+        }
+        final cardData = snapshot.getAccountDetailsModel?.result?.data;
+        if (cardData == null) return const SizedBox.shrink();
+
+        return Stack(
+          children: [
+            // Masking background for the placeholder name
+            Positioned(
+              left: 18.w,
+              bottom: 23.h,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF004961), // Matches the card Teal
+                  borderRadius: BorderRadius.circular(4),
                 ),
-              );
+                child: Text(
+                  cardData.accountName.toUpperCase(),
+                  style: getBoldStyle(
+                    color: ColorManager.white,
+                    fontSize: 15.sp,
+                  ).copyWith(letterSpacing: 1.1),
+                ),
+              ),
+            ),
+          ],
+        );
       }),
     );
   }

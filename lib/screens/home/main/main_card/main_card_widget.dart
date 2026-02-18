@@ -96,7 +96,7 @@ class MainCardWidget extends StatelessWidget {
                   fontSize: FontSize.s22,
                 ),
               ),
-              kSizedBox25,
+              kSizedBox16,
               //Card Widget
               const CardWidget(),
               kSizedBox16

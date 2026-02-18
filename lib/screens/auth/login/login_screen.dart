@@ -59,7 +59,11 @@ class LoginScreen extends HookWidget {
                                   fontSize: FontSize.s16),
                             ),
                             kSizedBox5,
-                            SvgPicture.asset(ImageAssets.shukria),
+                            Image.asset(
+                              ImageAssets.alRazoukiLogo,
+                              height: 110.h,
+                              fit: BoxFit.contain,
+                            ),
                           ],
                         ),
                         kSizedBox25,

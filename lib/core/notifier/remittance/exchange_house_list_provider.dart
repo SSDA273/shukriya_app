@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:unitey_app/core/api/remittance/exchange_house_list_api.dart';
 import 'package:unitey_app/models/exchange_house_model/exchange_house_model.dart';
@@ -13,6 +14,7 @@ class ExchangeHouseListNotifier extends ChangeNotifier {
   String? exchangeHouseName;
   String? serviceId;
   num? flatFee;
+  String? errorMessage;
 
   num? selectedExchangeRate;
   String selectedExchangeHouse="y";
@@ -51,37 +53,45 @@ flatFee =productModel.fee!.feeFlat;
   }) async {
     try {
       isLoading = true;
+      errorMessage = null;
       notifyListeners();
       
       final listData = await _exchangeHouseListAPI.getExchangeHouseList(fromCurrency: fromCurrency, toCurrency: toCurrency);
+      
+      print("📦 Exchange House API Response received");
       
       if (listData != null) {
         // Handle both single object and array responses from the API
         Map<String, dynamic> processedData = Map<String, dynamic>.from(listData);
         if (processedData['result'] != null && processedData['result'] is Map) {
-          // If result is a single object, wrap it in an array
+          print("🔄 Wrapping single 'result' object into a list");
           processedData['result'] = [processedData['result']];
         }
         
         _exchangeHouseModel = ExchangeHouseModel.fromJson(processedData);
-        _isResultAvailable = _exchangeHouseModel?.result?.isEmpty ?? true;
+        _isResultAvailable = _exchangeHouseModel?.result == null || _exchangeHouseModel!.result!.isEmpty;
 
-        print("isResultAvailable $_isResultAvailable");
+        print("📊 isResultEmpty: $_isResultAvailable");
         if (_isResultAvailable == false && 
             _exchangeHouseModel?.result?.isNotEmpty == true &&
-            _exchangeHouseModel!.result![0].products?.isNotEmpty == true) {
+            _exchangeHouseModel!.result![0].products != null) {
           _totalExchangeHouseLength = _exchangeHouseModel!.result![0].products!.length;
-          selectExchangeHouse(_exchangeHouseModel!.result![0].products!.first);
-          _productModel = _exchangeHouseModel!.result![0].products!.first;
-          print("Total Exchange Length $_totalExchangeHouseLength");
+          
+          if (_totalExchangeHouseLength > 0) {
+            selectExchangeHouse(_exchangeHouseModel!.result![0].products!.first);
+            _productModel = _exchangeHouseModel!.result![0].products!.first;
+          }
+          
+          print("✅ Total Exchange Products found: $_totalExchangeHouseLength");
         } else {
+          print("⚠️ No products found in the result");
           _totalExchangeHouseLength = 0;
         }
       } else {
         _exchangeHouseModel = null;
         _isResultAvailable = true;
         _totalExchangeHouseLength = 0;
-        print("Exchange house API returned null data");
+        print("❌ Exchange house API returned null or invalid data");
       }
       
       print("total length $_totalExchangeHouseLength");
@@ -89,6 +99,11 @@ flatFee =productModel.fee!.feeFlat;
       notifyListeners();
     } catch (error) {
       print("Exchange house API error: $error");
+      if (error is DioError && error.response != null) {
+        errorMessage = error.response?.data['message']?.toString();
+      } else {
+        errorMessage = error.toString();
+      }
       _exchangeHouseModel = null;
       _isResultAvailable = true;
       _totalExchangeHouseLength = 0;

@@ -16,6 +16,7 @@ import 'package:unitey_app/provider/biller_select_notifier.dart';
 import 'package:unitey_app/screens/home/add_bills/sub_category_screen.dart';
 import 'package:unitey_app/screens/home/pay_bills/pay_bill_amount_screen.dart';
 import 'package:unitey_app/screens/home/widgets/first_ads_widget.dart';
+import 'package:unitey_app/widgets/biller_image_widget.dart';
 
 class AddBillsScreen extends StatelessWidget {
   const AddBillsScreen({Key? key}) : super(key: key);
@@ -104,8 +105,8 @@ class BillsGridWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: Color(0xFFF4F4F4),
                                 borderRadius: BorderRadius.circular(10)),
-                            child: Image.network(
-                                "${AppAPI.baseUrl}/files?key=${billers.productId!.logo}"),
+                            child: BillerImage(
+                                imageKey: billers.productId!.logo),
                           ),
                         ),
                         kSizedBox12,

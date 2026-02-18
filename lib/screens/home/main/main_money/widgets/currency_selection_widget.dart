@@ -14,9 +14,20 @@ import '../../../../../core/notifier/remittance/exchange_house_list_provider.dar
 import '../../../../../core/notifier/remittance/fee_calculation_notifier.dart';
 import '../../../../../provider/beneficiary_select_notifier.dart';
 import '../../../../../widgets/circular_indicator_widget.dart';
+import '../../../../../constant/api_const/app_api.dart';
+import '../../../../../widgets/biller_image_widget.dart';
 
 class CurrencySelectionWidget extends HookWidget {
   const CurrencySelectionWidget({Key? key}) : super(key: key);
+
+  Widget _buildFlagImage(String? flagUrl, {double width = 32, double height = 24}) {
+    return BillerImage(
+      imageKey: flagUrl,
+      width: width,
+      height: height,
+      fit: BoxFit.contain,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,82 +110,80 @@ class CurrencySelectionWidget extends HookWidget {
 
                     Consumer<CurrencyListNotifier>(
                         builder: (context, snapshot, child) {
-                          return snapshot.isLoading == true
-                              ? const CircularIndicatorWidget()
-                              : DropdownButtonFormField<String>(
+                          final result = snapshot.getCurrencyModel?.result ?? [];
+                          if (snapshot.isLoading == true) {
+                            return const CircularIndicatorWidget();
+                          }
+                          if (result.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+
+                          // Find AED or fallback to first
+                          final defaultFromItem = result.firstWhere(
+                                (e) => e.currencyCode == "AED",
+                            orElse: () => result.first,
+                          );
+
+                          // Handle potential duplicates and nulls for dropdown keys
+                          final uniqueItems = <String>{};
+                          final dropdownItems = result.where((item) {
+                            if (item.currencyCode == null || item.currencyCode!.isEmpty) return false;
+                            return uniqueItems.add(item.currencyCode!);
+                          }).map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item.currencyCode,
+                              onTap: () {
+                                fromImage.value = item.countryFlag ?? "";
+                                fromCode.value = item.currencyCode ?? "";
+                                sendMoneyController.clear();
+                                receiveMoneyController.clear();
+                                selectedBeneficiary.selectCountry(
+                                  toCode.value.isEmpty ? "INR" : toCode.value,
+                                  item.currencyCode.toString(),
+                                );
+                                getExchangesNotifier.getExchangeHouseList(
+                                  context: context,
+                                  fromCurrency: item.currencyCode.toString(),
+                                  toCurrency: toCode.value.isEmpty ? "INR" : toCode.value,
+                                );
+                              },
+                              child: Text(
+                                item.currencyCode.toString(),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            );
+                          }).toList();
+
+                          // Ensure current value exists in items
+                          final currentFromValue = fromCode.value.isEmpty ? defaultFromItem.currencyCode : fromCurrencyCode;
+                          final verifiedFromValue = dropdownItems.any((item) => item.value == currentFromValue)
+                              ? currentFromValue
+                              : defaultFromItem.currencyCode;
+
+                          return DropdownButtonFormField<String>(
                             menuMaxHeight: 200,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: ColorManager.grey5, width: 1)),
-                              contentPadding:
-                              const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                              prefixIconConstraints:
-                              const BoxConstraints(minWidth: 50),
+                              contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 50),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(4.0)),
-                                borderSide:
-                                BorderSide(color: ColorManager.grey5),
+                                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                                borderSide: BorderSide(color: ColorManager.grey5),
                               ),
-                              floatingLabelStyle: getSemiBoldStyle(
-                                  color: ColorManager.primary),
+                              floatingLabelStyle: getSemiBoldStyle(color: ColorManager.primary),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(4.0)),
-                                borderSide:
-                                BorderSide(color: ColorManager.grey5),
+                                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                                borderSide: BorderSide(color: ColorManager.grey5),
                               ),
-                              prefixIcon: Transform.scale(
-                                scale: 1.8,
-                                child: Image.network(fromImage.value.isEmpty
-                                    ? snapshot.getCurrencyModel!.result![2]
-                                    .countryFlag
-                                    .toString()
-                                    : fromCurrencyImage),
+                              prefixIcon: _buildFlagImage(
+                                fromImage.value.isEmpty ? defaultFromItem.countryFlag : fromCurrencyImage,
                               ),
                             ),
-                            // hint: Text(
-                            //   fromCode.value.isEmpty
-                            //       ? "AED"
-                            //       : fromCurrencyCode,
-                            //   style: Theme.of(context).textTheme.bodyMedium,
-                            // ),
-                            value: fromCode.value.isEmpty
-                                ? "AED"
-                                : fromCurrencyCode,
+                            value: verifiedFromValue,
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            items: snapshot.getCurrencyModel!.result!
-                                .map((item) {
-                              return DropdownMenuItem<String>(
-                                value: item.currencyCode,
-                                onTap: () {
-                                  fromImage.value = item.countryFlag!;
-                                  fromCode.value = item.currencyCode!;
-                                  sendMoneyController.clear();
-                                  receiveMoneyController.clear();
-                                  selectedBeneficiary.selectCountry(
-                                    toCode.value.isEmpty
-                                        ? "INR"
-                                        : toCode.value,
-                                    item.currencyCode.toString(),
-                                  );
-                                  getExchangesNotifier.getExchangeHouseList(
-                                      context: context,
-                                      fromCurrency:
-                                      item.currencyCode.toString(),
-                                      //Todo: change
-                                      toCurrency: toCode.value.isEmpty
-                                          ? "INR"
-                                          : toCode.value);
-                                },
-                                child: Text(
-                                  item.currencyCode.toString(),
-                                  style:
-                                  Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              );
-                            }).toList(),
+                            items: dropdownItems,
                             onChanged: (_) {},
                           );
                         }),
@@ -236,95 +245,77 @@ class CurrencySelectionWidget extends HookWidget {
                     kSizedBox5,
                     Consumer<CurrencyListNotifier>(
                         builder: (context, snapshot, child) {
-                          return snapshot.isLoading == true
-                              ? const CircularIndicatorWidget()
-                              : DropdownButtonFormField<String>(
+                          final result = snapshot.getCurrencyModel?.result ?? [];
+                          if (snapshot.isLoading == true) {
+                            return const CircularIndicatorWidget();
+                          }
+                          if (result.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+
+                          // Find INR or fallback to first
+                          final defaultToItem = result.firstWhere(
+                                (e) => e.currencyCode == "INR",
+                            orElse: () => result.first,
+                          );
+
+                          // Handle potential duplicates and nulls for dropdown keys
+                          final uniqueItems = <String>{};
+                          final dropdownItems = result.where((item) {
+                            if (item.currencyCode == null || item.currencyCode!.isEmpty) return false;
+                            return uniqueItems.add(item.currencyCode!);
+                          }).map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item.currencyCode,
+                              onTap: () {
+                                toImage.value = item.countryFlag ?? "";
+                                toCode.value = item.currencyCode ?? "";
+                                sendMoneyController.clear();
+                                receiveMoneyController.clear();
+                                selectedBeneficiary.selectCountry(
+                                    item.currencyCode.toString(), fromCode.value);
+                                getExchangesNotifier.getExchangeHouseList(
+                                    context: context,
+                                    fromCurrency: fromCode.value.isEmpty ? "AED" : fromCode.value,
+                                    toCurrency: item.currencyCode.toString());
+                              },
+                              child: Text(
+                                item.currencyCode.toString(),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            );
+                          }).toList();
+
+                          // Ensure current value exists in items
+                          final currentToValue = toCode.value.isEmpty ? defaultToItem.currencyCode : toCurrencyCode;
+                          final verifiedToValue = dropdownItems.any((item) => item.value == currentToValue)
+                              ? currentToValue
+                              : defaultToItem.currencyCode;
+
+                          return DropdownButtonFormField<String>(
                             menuMaxHeight: 200,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: ColorManager.grey5, width: 1)),
-                                contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                prefixIconConstraints:
-                                const BoxConstraints(minWidth: 50),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(4.0)),
-                                  borderSide:
-                                  BorderSide(color: ColorManager.grey5),
-                                ),
-                                floatingLabelStyle: getSemiBoldStyle(
-                                    color: ColorManager.primary),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(4.0)),
-                                  borderSide:
-                                  BorderSide(color: ColorManager.grey5),
-                                ),
-                                // prefixIconConstraints: BoxConstraints(maxWidth: 45,minWidth: 40),
-                                prefixIcon: Transform.scale(
-                                  scale: 1.8,
-                                  child: Image.network(
-                                    toImage.value.isEmpty
-                                        ? snapshot.getCurrencyModel!
-                                        .result![0].countryFlag
-                                        .toString()
-                                        : toCurrencyImage,
-                                  ),
-                                )),
-                            // hint: Text(
-                            //     toCode.value.isEmpty
-                            //         ?"INR"
-                            //         : toCurrencyCode,
-                            //     style: Theme.of(context).textTheme.bodyMedium),
-                            value:
-                            toCode.value.isEmpty ? "INR" : toCurrencyCode,
-                            items: snapshot.getCurrencyModel!.result!
-                                .map((item) {
-                              return DropdownMenuItem<String>(
-                                value: item.currencyCode,
-                                onTap: () {
-                                  toImage.value = item.countryFlag!;
-                                  toCode.value = item.currencyCode!;
-                                  sendMoneyController.clear();
-                                  receiveMoneyController.clear();
-                                  selectedBeneficiary.selectCountry(
-                                      item.currencyCode.toString(),
-                                      fromCode.value);
-                                  getExchangesNotifier.getExchangeHouseList(
-                                      context: context,
-                                      fromCurrency: fromCode.value.isEmpty
-                                          ? "AED"
-                                          : fromCode.value,
-                                      //Todo: change
-                                      toCurrency:
-                                      item.currencyCode.toString());
-                                },
-                                child: Text(
-                                  item.currencyCode.toString(),
-                                  style:
-                                  Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                // child: Row(
-                                //   mainAxisSize: MainAxisSize.min,
-                                //   children: [
-                                //     Transform.scale(
-                                //       scale: 1.5,
-                                //       child: Image.network(item.countryFlag.toString(),
-                                //       ),
-                                //     ),
-                                //     kSizedW10,
-                                //     Text(
-                                //       item.currencyCode.toString(),
-                                //       style:
-                                //           Theme.of(context).textTheme.bodyMedium,
-                                //     ),
-                                //   ],
-                                // ),
-                              );
-                            }).toList(),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorManager.grey5, width: 1)),
+                              contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 50),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                                borderSide: BorderSide(color: ColorManager.grey5),
+                              ),
+                              floatingLabelStyle: getSemiBoldStyle(color: ColorManager.primary),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                                borderSide: BorderSide(color: ColorManager.grey5),
+                              ),
+                              prefixIcon: _buildFlagImage(
+                                toImage.value.isEmpty ? defaultToItem.countryFlag : toCurrencyImage,
+                              ),
+                            ),
+                            value: verifiedToValue,
+                            items: dropdownItems,
                             onChanged: (_) {},
                           );
                         }),

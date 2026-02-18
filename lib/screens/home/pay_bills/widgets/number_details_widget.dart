@@ -10,6 +10,7 @@ import 'package:unitey_app/constant/values_manger.dart';
 import 'package:unitey_app/core/notifier/account_details_notifier.dart';
 import 'package:unitey_app/provider/biller_select_notifier.dart';
 import 'package:unitey_app/widgets/small_card_widget.dart';
+import 'package:unitey_app/widgets/biller_image_widget.dart';
 
 class NumberDetailsWidget extends StatelessWidget {
   const NumberDetailsWidget({
@@ -41,16 +42,15 @@ class NumberDetailsWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: AppPadding.p8),
             child: Row(
               children: [
-                Container(
-                  height: 45.w,
-                  width: 45.w,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: ColorManager.grey4),
-                      image: DecorationImage(
-                          image: NetworkImage( "${AppAPI.baseUrl}/files?key=${type=="newBills"?selectedBillerNotifier.getBillLogo!:selectedBillerNotifier.getBillerLogo!}"),
-                          fit: BoxFit.cover
-                      )),),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: BillerImage(
+                    imageKey: type == "newBills" ? selectedBillerNotifier.getBillLogo! : selectedBillerNotifier.getBillerLogo!,
+                    height: 45.w,
+                    width: 45.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 kSizedW15,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

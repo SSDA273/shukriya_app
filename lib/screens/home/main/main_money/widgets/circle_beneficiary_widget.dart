@@ -11,6 +11,7 @@ import 'package:unitey_app/constant/style_manager.dart';
 import 'package:unitey_app/constant/values_manger.dart';
 
 import '../../../../../generated/l10n.dart';
+import '../../../../../widgets/biller_image_widget.dart';
 import '../../../../../provider/beneficiary_select_notifier.dart';
 
 class CircleBeneficiaryWidget extends StatelessWidget {
@@ -33,17 +34,24 @@ class CircleBeneficiaryWidget extends StatelessWidget {
       padding: const EdgeInsets.only(right: AppPadding.p18),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 24.r,
-            child: beneficiaryId == selectedNotifier.getBeneficiaryId
-                ? CircleAvatar(
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              ClipOval(
+                child: BillerImage(
+                  imageKey: beneficiaryImage,
+                  fallbackAsset: ImageAssets.profile,
+                  height: 48.r,
+                  width: 48.r,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              if (beneficiaryId == selectedNotifier.getBeneficiaryId)
+                CircleAvatar(
                     radius: 24.r,
-                    backgroundColor: Color(0xFF27AE60).withOpacity(0.6),
-                    child: SvgPicture.asset(ImageAssets.selected))
-                : kSizedBox,
-            backgroundColor: Colors.grey,
-            backgroundImage:
-                NetworkImage("${AppAPI.baseUrl}/files?key=$beneficiaryImage"),
+                    backgroundColor: const Color(0xFF27AE60).withOpacity(0.6),
+                    child: SvgPicture.asset(ImageAssets.selected)),
+            ],
           ),
           kSizedBox10,
           Text(beneficiaryName,

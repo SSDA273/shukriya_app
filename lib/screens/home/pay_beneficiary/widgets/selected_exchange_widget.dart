@@ -11,6 +11,7 @@ import '../../../../constant/font_manager.dart';
 import '../../../../constant/style_manager.dart';
 import '../../../../constant/values_manger.dart';
 import '../../../../provider/beneficiary_select_notifier.dart';
+import '../../../../widgets/biller_image_widget.dart';
 
 class SelectedExchangeWidget extends StatelessWidget {
   const SelectedExchangeWidget({
@@ -37,15 +38,13 @@ class SelectedExchangeWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                height: 30.w,
-                width: 30.w,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFFEFEFEF)),
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "${AppAPI.baseUrl}/files?key=${selectedBeneficiary.getExchangeHouseLogo!}")),
-                    shape: BoxShape.circle),
+              ClipOval(
+                child: BillerImage(
+                  imageKey: selectedBeneficiary.getExchangeHouseLogo!,
+                  height: 30.w,
+                  width: 30.w,
+                  fit: BoxFit.cover,
+                ),
               ),
               kSizedW6,
               Text(

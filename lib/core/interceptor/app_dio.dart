@@ -57,10 +57,7 @@ class AppInterceptors extends Interceptor {
       case DioErrorType.response:
         switch (err.response?.statusCode) {
           case 400:
-            const SnackBar snackBar = SnackBar(
-                backgroundColor: Colors.red, content: Text("Something went wrong"));
-            snackbarKey.currentState?.showSnackBar(snackBar);
-            throw BadRequestException(err.requestOptions);
+            throw BadRequestException(err.requestOptions, err.response);
           case 401:
             throw UnauthorizedException(err.requestOptions);
           case 404:
@@ -83,10 +80,17 @@ class AppInterceptors extends Interceptor {
 }
 
 class BadRequestException extends DioError {
-  BadRequestException(RequestOptions r) : super(requestOptions: r);
+  BadRequestException(RequestOptions r, [Response? response])
+      : super(requestOptions: r, response: response);
 
   @override
   String toString() {
+    if (response != null && response!.data != null) {
+      if (response!.data is Map && response!.data['message'] != null) {
+        return response!.data['message'].toString();
+      }
+      return response!.data.toString();
+    }
     return 'Invalid request';
   }
 }

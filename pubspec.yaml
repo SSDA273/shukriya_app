@@ -56,16 +56,16 @@ dependencies:
 
 # ✅ FLUTTER NATIVE SPLASH CONFIG
 flutter_native_splash:
-  color: "#E8F5E9"
-  image: assets/images/app_logo.png
+  color: "#F3E5F5"
+  image: assets/images/al_razouki_logo.png
 
-  color_dark: "#C8E6C9"
-  image_dark: assets/images/al_razouki_logo_white.png
+  color_dark: "#F3E5F5"
+  image_dark: assets/images/splash_screen_logo.png
 
   android_12:
-    image: assets/images/app_logo.png
-    color: "#E0F2F1"
-    icon_background_color: "#E0F2F1"
+    image: assets/images/splash_screen_logo.png
+    color: "#F3E5F5"
+    icon_background_color: "#F3E5F5"
 
   web_image_mode: center
   android_gravity: center
@@ -76,7 +76,7 @@ flutter_native_splash:
 flutter_icons:
   android: true
   ios: true
-  image_path: assets/images/app_logo.png
+  image_path: assets/images/al_razouki_logo.png
   remove_alpha_ios: true
 
 dev_dependencies:

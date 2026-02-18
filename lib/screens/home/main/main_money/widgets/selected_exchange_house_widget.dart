@@ -15,6 +15,7 @@ import '../../../../../core/notifier/remittance/fee_calculation_notifier.dart';
 import '../../../../../generated/l10n.dart';
 import '../../../../../provider/beneficiary_select_notifier.dart';
 import '../../../../../widgets/circular_indicator_widget.dart';
+import '../../../../../widgets/biller_image_widget.dart';
 
 class SelectedExchangeHouseWidget extends StatelessWidget {
   const SelectedExchangeHouseWidget({
@@ -30,12 +31,16 @@ class SelectedExchangeHouseWidget extends StatelessWidget {
         builder: (context, snapshot, child) {
           return snapshot.isLoading == true
               ? const CircularIndicatorWidget()
-              : snapshot.getIsResultIsEmpty == true
+              : (snapshot.getIsResultIsEmpty == true || snapshot.errorMessage != null)
               ? Center(
-            child: Text(
-              "Exchange house not available for ${selectedBeneficiary.getFromCountry??"AED"} to ${selectedBeneficiary.getToCountry ??"INR"}",
-              style: getSemiBoldStyle(
-                  color: ColorManager.grey, fontSize: FontSize.s14),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                snapshot.errorMessage ?? "exchanges house data couldn't be loaded",
+                textAlign: TextAlign.center,
+                style: getSemiBoldStyle(
+                    color: ColorManager.grey, fontSize: FontSize.s14),
+              ),
             ),
           )
               : DottedBorder(
@@ -95,20 +100,16 @@ class SelectedExchangeHouseWidget extends StatelessWidget {
                   Flexible(
                     child: Row(
                       children: [
-                        Container(
-                          height: 30.w,
-                          width: 30.w,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: Color(0xFFEFEFEF)),
-                              image: snapshot.getExchangeHouseModel?.result?.isNotEmpty == true &&
-                              snapshot.getExchangeHouseModel!.result![0].products?.isNotEmpty == true &&
-                              snapshot.getExchangeHouseModel!.result![0].products![0].logo?.isNotEmpty == true
-                              ? DecorationImage(
-                                  image: NetworkImage("${AppAPI.baseUrl}/files?key=${snapshot.getExchangeHouseModel!.result![0].products![0].logo}"),
-                                  fit: BoxFit.cover
-                              )
-                              : null
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: BillerImage(
+                            imageKey: (snapshot.getExchangeHouseModel?.result?.isNotEmpty == true &&
+                                snapshot.getExchangeHouseModel!.result![0].products?.isNotEmpty == true)
+                                ? snapshot.getExchangeHouseModel!.result![0].products![0].logo
+                                : null,
+                            height: 30.w,
+                            width: 30.w,
+                            fit: BoxFit.cover,
                           ),
                         ),
                         kSizedW10,

@@ -12,7 +12,9 @@ import '../../../../constant/color_manger.dart';
 import '../../../../constant/constants.dart';
 import '../../../../constant/font_manager.dart';
 import '../../../../constant/style_manager.dart';
+import '../../../../constant/style_manager.dart';
 import '../../../../constant/values_manger.dart';
+import '../../../../widgets/biller_image_widget.dart';
 import '../../../../core/notifier/customer/customer_profile_notifier.dart';
 
 class ProfileAppBar extends StatelessWidget {
@@ -78,33 +80,14 @@ class ProfileAppBar extends StatelessWidget {
                     left: AppPadding.p20.w, right: AppPadding.p24.w,),
                 child: Row(
                   children: [
-                    Container(
-                      height: 56.w,
-                      width: 56.w,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorManager.secondaryDark,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white38,
-                            spreadRadius: 1,
-                            blurRadius: 15
-                          )
-                        ],
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "${AppAPI.baseUrl}/files?key=${profileNotifier.getCustomerImage}",
-                          ),
-                          fit: BoxFit.cover
-                        ),
+                    ClipOval(
+                      child: BillerImage(
+                        imageKey: profileNotifier.getCustomerImage,
+                        fallbackAsset: ImageAssets.profile,
+                        height: 56.w,
+                        width: 56.w,
+                        fit: BoxFit.cover,
                       ),
-                      child: (profileNotifier.getCustomerImage ?? '').isEmpty
-                          ? SvgPicture.asset(
-                              ImageAssets.profile,
-                              height: 15.15,
-                              width: 11.65,
-                            )
-                          : null,
                     ),
                     kSizedW10,
                     Column(

@@ -55,6 +55,7 @@ class ImageAssets {
   static const String alRazoukiLogo = "$imagePath/al_razouki_logo.png";
   static const String alRazoukiLogoWhite = "$imagePath/al_razouki_logo_white.png";
 
+  static const String cardDemo = "$imagePath/card_demo.png";
   static const String rewardPointsIc = "$iconPath/rewardPointsIc.svg";
   static const String billPaymentIc = "$iconPath/billPaymentIc.svg";
   static const String superSavingsIc = "$iconPath/superSavingsIc.svg";

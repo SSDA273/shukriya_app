@@ -9,6 +9,8 @@ import '../../../../constant/font_manager.dart';
 import '../../../../constant/style_manager.dart';
 import '../../../../constant/values_manger.dart';
 import '../../../../provider/beneficiary_select_notifier.dart';
+import '../../../../constant/asset_manager.dart';
+import '../../../../widgets/biller_image_widget.dart';
 
 class SelectedBeneficiaryWidget extends StatelessWidget {
   const SelectedBeneficiaryWidget({
@@ -52,11 +54,14 @@ class SelectedBeneficiaryWidget extends StatelessWidget {
               )),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage(
-                    "${AppAPI.baseUrl}/files?key=${selectedBeneficiary.getBeneficiaryImage}"),
+              ClipOval(
+                child: BillerImage(
+                  imageKey: selectedBeneficiary.getBeneficiaryImage,
+                  fallbackAsset: ImageAssets.profile,
+                  height: 60,
+                  width: 60,
+                  fit: BoxFit.cover,
+                ),
               ),
               kSizedW15,
               Column(

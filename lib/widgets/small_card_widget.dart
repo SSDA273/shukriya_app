@@ -59,12 +59,14 @@ class SmallCardWidget extends StatelessWidget {
         children: [
           //Card Widget
           Container(
-            padding: const EdgeInsets.fromLTRB(AppPadding.p6, AppPadding.p8, AppPadding.p12, AppPadding.p6),
             height: 59.h,
             width: 93.w,
             decoration: BoxDecoration(
-              color:ColorManager.primary,
               borderRadius: BorderRadius.circular(4.r),
+              image: const DecorationImage(
+                image: AssetImage(ImageAssets.cardDemo),
+                fit: BoxFit.fill,
+              ),
               boxShadow: const [
                 BoxShadow(
                     color: Colors.black12,
@@ -73,56 +75,26 @@ class SmallCardWidget extends StatelessWidget {
                     spreadRadius: 2)
               ],
             ),
-            child:   Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Image.asset(
-                      "assets/images/fardan.png",
-                      width: 40,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 5.w,
+                  bottom: 6.h,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF004961), // Matches the card Teal
+                      borderRadius: BorderRadius.circular(2),
                     ),
-
-                    SvgPicture.asset(
-                      ImageAssets.cardChip,
-                      height: 9,
-                      width: 13,
+                    child: Text(
+                      cardDetails.accountName.toUpperCase(),
+                      style: getBoldStyle(
+                        color: ColorManager.white,
+                        fontSize: 4.sp,
+                      ).copyWith(letterSpacing: 0.4),
                     ),
-                  ],
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: "${cardDetails.accountNumberLast4}\n",
-                                style: getBoldStyle(color: ColorManager.white,fontSize: 5)
-                            ),
-                            TextSpan(
-                                text: cardDetails.accountName,
-                                style: getRegularStyle(color: ColorManager.white,fontSize:5))
-                          ],
-                        )),
-                    Column(
-                      children: [
-                        Image.asset(
-                          "assets/images/mercury.jpeg",
-                          width: 10,
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          cardDetails.expiry,
-                          style: getRegularStyle(color: ColorManager.white,fontSize: 5),
-                        )
-                      ],
-                    ),
-                  ],
-                )
               ],
             ),
           ),

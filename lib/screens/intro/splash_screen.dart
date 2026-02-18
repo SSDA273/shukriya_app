@@ -96,9 +96,8 @@ class _SplashScreenState extends State<SplashScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              //HexColor.fromHex("#1cd475"),
-              ColorManager.primary,
-              ColorManager.darkPrimary,
+              ColorManager.splashPrimary,
+              ColorManager.splashDarkPrimary,
             ],
           ),
         ),

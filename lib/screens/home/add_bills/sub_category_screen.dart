@@ -16,6 +16,7 @@ import 'package:unitey_app/extension/color_extension.dart';
 import 'package:unitey_app/generated/l10n.dart';
 import 'package:unitey_app/provider/biller_select_notifier.dart';
 import 'package:unitey_app/widgets/text_field_widget.dart';
+import 'package:unitey_app/widgets/biller_image_widget.dart';
 
 import 'enter_number_screen.dart';
 
@@ -124,7 +125,7 @@ class SubCategoryScreen extends HookWidget {
                                 borderRadius:BorderRadius.circular(12),
                                 color: ColorManager.white
                             ),
-                            child: Image.network("${AppAPI.baseUrl}/files?key=${bills.logo}"),
+                            child: BillerImage(imageKey: bills.logo),
                           ),
                         ),
                         SizedBox(

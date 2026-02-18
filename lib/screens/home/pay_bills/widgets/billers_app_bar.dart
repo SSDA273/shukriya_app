@@ -10,7 +10,10 @@ import '../../../../constant/constants.dart';
 import '../../../../constant/font_manager.dart';
 import '../../../../constant/style_manager.dart';
 import '../../../../constant/values_manger.dart';
+import '../../../../constant/style_manager.dart';
+import '../../../../constant/values_manger.dart';
 import '../../../../provider/biller_select_notifier.dart';
+import '../../../../widgets/biller_image_widget.dart';
 
 class BillersAppBar extends StatelessWidget {
   const BillersAppBar({
@@ -48,17 +51,15 @@ class BillersAppBar extends StatelessWidget {
           kSizedBox25,
           Row(
             children: [
-              Container(
-                height: 45.w,
-                width: 45.w,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: ColorManager.grey4),
-                    image: DecorationImage(
-                        image: NetworkImage( "${AppAPI.baseUrl}/files?key=${
-                            type=="newBills"?selectedBillerNotifier.getBillLogo:selectedBillerNotifier.getBillerLogo!}"),
-                        fit: BoxFit.cover
-                    )),),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: BillerImage(
+                  imageKey: type == "newBills" ? selectedBillerNotifier.getBillLogo : selectedBillerNotifier.getBillerLogo!,
+                  height: 45.w,
+                  width: 45.w,
+                  fit: BoxFit.cover,
+                ),
+              ),
               kSizedW15,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
