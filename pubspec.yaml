@@ -33,7 +33,7 @@ dependencies:
   app_settings: ^7.0.0
 
   flutter_screenutil: ^5.5.2
-  screenshot: ^1.2.3
+  screenshot: ^3.0.0
   share_plus: ^12.0.0
   path_provider: ^2.0.8
   camera: ^0.10.0 

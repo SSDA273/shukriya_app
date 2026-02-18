@@ -14,17 +14,25 @@ bool get getIsValidated => _isValidated;
   }) async {
     try {
       isLoading = true;
-      final userToken=context.read<GieomTokenNotifier>().getGieomToken;
-      final data = await _processAPI.getProcessFile(userId: userToken!);
+      notifyListeners();
+      final userToken = context.read<GieomTokenNotifier>().getGieomToken;
+      if (userToken == null) {
+        throw "Session token is missing. Please restart the process.";
+      }
+      final data = await _processAPI.getProcessFile(userId: userToken);
       final message = data['message'];
-      if(message == 'Success'){
-        _isValidated =true;
+      if (message == 'Success') {
+        _isValidated = true;
         print("Processing finished");
+      } else {
+        throw message ?? "Unknown error during processing";
       }
 
       isLoading = false;
       notifyListeners();
-    } catch(error){
+    } catch (error) {
+      isLoading = false;
+      notifyListeners();
       rethrow;
     }
   }

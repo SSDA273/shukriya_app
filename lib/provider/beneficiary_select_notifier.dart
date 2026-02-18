@@ -92,13 +92,14 @@ class BeneficiarySelectNotifier extends ChangeNotifier {
 
   num get getReceiveAmount => _receiveAmount;
 
-  set setReceiveAmount (fee){
-    _receiveAmount = (fee + _sendAmount) * _exchangeRate;
+  set setReceiveAmount(fee) {
+    _transferFee = 0.0; // Force fee to 0
+    _receiveAmount = _sendAmount * _exchangeRate;
     notifyListeners();
   }
 
-  set setTransferFee (fee){
-    _transferFee =fee;
+  set setTransferFee(fee) {
+    _transferFee = 0.0; // Force fee to 0
     notifyListeners();
   }
   void selectCountry(String toCountryCode, String fromCountryCode) {
@@ -113,6 +114,8 @@ class BeneficiarySelectNotifier extends ChangeNotifier {
     _exchangeHouseLogo = exchangeProductModel.logo;
     _serviceId = exchangeProductModel.serviceId;
     _exchangeRate = exchangeProductModel.fee?.fxRate ?? 0.0;
+    _transferFee = 0.0; // Force fee to 0 as requested
+    _receiveAmount = _sendAmount * _exchangeRate;
     _feeFXId = exchangeProductModel.fee?.id;
     notifyListeners();
   }

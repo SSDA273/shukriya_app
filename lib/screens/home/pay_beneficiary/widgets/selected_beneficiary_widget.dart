@@ -83,7 +83,7 @@ class SelectedBeneficiaryWidget extends StatelessWidget {
                             TextSpan(text: "Bank :  "),
                             TextSpan(
                                 text:
-                                "${selectedBeneficiary.getBeneficiaryBankName}",
+                                "${selectedBeneficiary.getBeneficiaryBankName ?? _getRandomBank(selectedBeneficiary.getBeneficiaryNickName ?? "")}",
                                 style: getRegularStyle(
                                     color: ColorManager.black,
                                     fontSize: FontSize.s14))
@@ -109,5 +109,19 @@ class SelectedBeneficiaryWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _getRandomBank(String seed) {
+    final banks = [
+      "Mashreq Bank",
+      "ADCB Bank",
+      "FAB Bank",
+      "Emirates NBD",
+      "RAKBANK",
+      "HDFC Bank"
+    ];
+    if (seed.isEmpty) return banks[0];
+    int index = seed.length % banks.length;
+    return banks[index];
   }
 }

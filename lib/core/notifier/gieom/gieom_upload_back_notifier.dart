@@ -13,10 +13,21 @@ class GieomUploadBackNotifier extends ChangeNotifier {
     required String base64Image,
   }) async {
     try {
-      final userToken=context.read<GieomTokenNotifier>().getGieomToken;
+      final userToken = context.read<GieomTokenNotifier>().getGieomToken;
+      if (userToken == null) {
+        print("userToken is null");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Session expired or invalid. Please restart the process."),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       print("userToken $userToken");
       // final scopeNotifier = Provider.of<ScopeNotifier>(context, listen: false);
-      final otpData = await _uploadBackAPI.uploadBackImage(userToken: userToken!, base64Image: base64Image);
+      final otpData = await _uploadBackAPI.uploadBackImage(
+          userToken: userToken, base64Image: base64Image);
       final message = otpData['message'];
       if (message == "Success") {
         _isValidated = true;

@@ -19,14 +19,26 @@ class FeeCalculationNotifier extends ChangeNotifier {
 
   Future<void> getRemittanceFee({
     required BuildContext context,
-    required  String feeFxId,
+    required String feeFxId,
     required num amount,
     required String commissionType,
+    required String fromCurrency,
+    required String toCurrency,
+    required String serviceId,
+    required String toCountry,
   }) async {
     try {
       _isLoading = true;
       notifyListeners();
-      final detailsData = await _feeCalculationAPI.getTotalRemittanceFee(feeFxId: feeFxId, amount: amount,commissionType:commissionType);
+      final detailsData = await _feeCalculationAPI.getTotalRemittanceFee(
+        feeFxId: feeFxId,
+        amount: amount,
+        commissionType: commissionType,
+        fromCurrency: fromCurrency,
+        toCurrency: toCurrency,
+        serviceId: serviceId,
+        toCountry: toCountry,
+      );
       final statusCode = detailsData['statusCode'];
       if(statusCode == 200){
         if(commissionType == "customer"){

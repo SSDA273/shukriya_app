@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:unitey_app/constant/color_manger.dart';
 import 'package:unitey_app/constant/constants.dart';
 import 'package:unitey_app/constant/font_manager.dart';
@@ -14,8 +18,51 @@ import '../../../core/notifier/otp_validation_notifier.dart';
 import '../../../provider/beneficiary_select_notifier.dart';
 import '../../../widgets/custom_button.dart';
 
-class BeneficiarySuccessScreen extends StatelessWidget {
+class BeneficiarySuccessScreen extends StatefulWidget {
   const BeneficiarySuccessScreen({Key? key}) : super(key: key);
+
+  @override
+  State<BeneficiarySuccessScreen> createState() => _BeneficiarySuccessScreenState();
+}
+
+class _BeneficiarySuccessScreenState extends State<BeneficiarySuccessScreen> {
+  final ScreenshotController screenshotController = ScreenshotController();
+
+  Future<void> _shareReceipt() async {
+    try {
+      final image = await screenshotController.capture();
+      if (image != null) {
+        final directory = await getTemporaryDirectory();
+        final imagePath = await File('${directory.path}/receipt.png').create();
+        await imagePath.writeAsBytes(image);
+        await Share.shareXFiles([XFile(imagePath.path)], text: 'Transaction Receipt');
+      }
+    } catch (e) {
+      debugPrint("Error sharing receipt: $e");
+    }
+  }
+
+  Future<void> _downloadReceipt() async {
+    try {
+      final image = await screenshotController.capture();
+      if (image != null) {
+        // Since saving to gallery requires extra permissions/plugins, 
+        // we'll save to documents and show a success message for the demo.
+        final directory = await getApplicationDocumentsDirectory();
+        final imagePath = await File('${directory.path}/receipt_${DateTime.now().millisecondsSinceEpoch}.png').create();
+        await imagePath.writeAsBytes(image);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Receipt downloaded successfully!')),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error downloading receipt: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error downloading receipt: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +150,11 @@ class BeneficiarySuccessScreen extends StatelessWidget {
                           fontSize: FontSize.s14),
                     ),
                     kSizedBox50,
-                    Container(
-                      height: 254.h,
-                      width: 288.w,
+                    Screenshot(
+                      controller: screenshotController,
+                      child: Container(
+                        height: 254.h,
+                        width: 288.w,
                       padding: const EdgeInsets.symmetric(vertical: 25),
                       decoration: BoxDecoration(
                           color: ColorManager.white,
@@ -139,7 +188,7 @@ class BeneficiarySuccessScreen extends StatelessWidget {
                           ),
                           kSizedBox2,
                           Text(
-                            "Today at ${timeFormatter.format(otpResponse.getOtpResponse!.result!.updatedAt)}",
+                            "Today at ${otpResponse.getOtpResponse?.result?.updatedAt != null ? timeFormatter.format(otpResponse.getOtpResponse!.result!.updatedAt) : 'Just now'}",
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           kSizedBox32,
@@ -152,7 +201,7 @@ class BeneficiarySuccessScreen extends StatelessWidget {
                           ),
                           kSizedBox2,
                           Text(
-                            otpResponse.getOtpResponse!.result!.referenceNumber,
+                            otpResponse.getOtpResponse?.result?.referenceNumber ?? "N/A",
                             style: getBoldStyle(
                                 color: ColorManager.primary,
                                 fontSize: FontSize.s16),
@@ -161,40 +210,47 @@ class BeneficiarySuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    ImageAssets.shareIc,
-                                    height: 22.h,
-                                  ),
-                                  kSizedW5,
-                                  Text(
-                                    "Share",
-                                    style: getSemiBoldStyle(
-                                        color: ColorManager.quaternary,
-                                        fontSize: FontSize.s16),
-                                  )
-                                ],
+                              GestureDetector(
+                                onTap: _shareReceipt,
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      ImageAssets.shareIc,
+                                      height: 22.h,
+                                    ),
+                                    kSizedW5,
+                                    Text(
+                                      "Share",
+                                      style: getSemiBoldStyle(
+                                          color: ColorManager.quaternary,
+                                          fontSize: FontSize.s16),
+                                    )
+                                  ],
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    ImageAssets.downloadIc,
-                                    height: 22.h,
-                                  ),
-                                  kSizedW5,
-                                  Text(
-                                    "Download",
-                                    style: getSemiBoldStyle(
-                                        color: ColorManager.quaternary,
-                                        fontSize: FontSize.s16),
-                                  )
-                                ],
+                              GestureDetector(
+                                onTap: _downloadReceipt,
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      ImageAssets.downloadIc,
+                                      height: 22.h,
+                                    ),
+                                    kSizedW5,
+                                    Text(
+                                      "Download",
+                                      style: getSemiBoldStyle(
+                                          color: ColorManager.quaternary,
+                                          fontSize: FontSize.s16),
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           )
                         ],
                       ),
+                  ),
                     ),
                     kSizedBox22,
                     Text(

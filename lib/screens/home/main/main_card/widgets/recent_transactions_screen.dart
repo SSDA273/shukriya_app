@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unitey_app/constant/constants.dart';
 
+import 'package:provider/provider.dart';
+import '../../../../../core/notifier/transaction_notifier.dart';
 import '../../../../../constant/color_manger.dart';
 import '../../../../../constant/font_manager.dart';
 
@@ -32,39 +34,23 @@ class RecentTransactionScreen extends StatelessWidget {
                 .copyWith(fontSize: FontSize.s17,color: Colors.black),
           )),
       body: SafeArea(
-        child: Column(
-          children: const [
-            MailCard(
-              title: "Send to Nihad",
-              description:
-              "12-01-2021",
-              time: "10,000.00 AED",
-            ),
-            MailCard(
-              title: "Du Recharge",
-              description:
-              "03-01-2021",
-              time: "20.00 AED",
-            ),
-            MailCard(
-              title: "Du Recharge",
-              description:
-              "01-01-2021",
-              time: "399.00 AED",
-            ),
-            MailCard(
-              title: "Etisalat Recharge",
-              description:
-              "01-01-2021",
-              time: "199.00 AED",
-            ),
-            MailCard(
-              title: "Send to John",
-              description:
-              "31-10-2020",
-              time: "20,000.00 AED",
-            ),
-          ],
+        child: Consumer<TransactionNotifier>(
+          builder: (context, notifier, child) {
+            return ListView.builder(
+              itemCount: notifier.transactions.length,
+              itemBuilder: (context, index) {
+                final tx = notifier.transactions[index];
+                return MailCard(
+                  title: tx.title,
+                  description: tx.date,
+                  time: tx.amount,
+                  status: tx.status,
+                  cardDescription: tx.description,
+                  referenceNumber: tx.referenceNumber,
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -78,28 +64,36 @@ class MailCard extends StatelessWidget {
     required String time,
     required String title,
     required String description,
+    required String status,
+    required String cardDescription,
+    String? referenceNumber,
     Color color = Colors.white,
   })  : _time = time,
         _title = title,
         _description = description,
+        _status = status,
+        _cardDescription = cardDescription,
+        _referenceNumber = referenceNumber,
         _color = color,
         super(key: key);
 
   final String _time;
   final String _title;
   final String _description;
+  final String _status;
+  final String _cardDescription;
+  final String? _referenceNumber;
   final Color _color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
       width: double.infinity,
       decoration: BoxDecoration(
         color: _color,
         border: Border(
           bottom: BorderSide(
-            color:  ColorManager.primary,
+            color: ColorManager.primary,
             width: 0.5,
           ),
         ),
@@ -108,29 +102,28 @@ class MailCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   _title,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15
-                  ),
+                  style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
-                Text("From: WPS Card",
-                  style: TextStyle(
-                    color: Colors.black38,
-                      fontSize: 13
-                  ),),
+                Text(
+                  _cardDescription,
+                  style: TextStyle(color: Colors.black38, fontSize: 13),
+                ),
+                if (_referenceNumber != null)
+                  Text(
+                    _referenceNumber!,
+                    style: TextStyle(color: ColorManager.primary, fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
                 SizedBox(height: 5),
-                Text(_description,
-                  style: TextStyle(
-                      fontSize: 13
-                  ),),
+                Text(
+                  _description,
+                  style: TextStyle(fontSize: 13),
+                ),
               ],
             ),
           ),
@@ -142,19 +135,18 @@ class MailCard extends StatelessWidget {
                 _time,
                 textAlign: TextAlign.end,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               ),
               kSizedBox5,
               Text(
-                "Success",
+                _status,
                 textAlign: TextAlign.end,
                 style: TextStyle(
-                  color: Colors.green,
+                  color: _status.toLowerCase() == "success" ? Colors.green : Colors.red,
                   fontSize: 15,
                 ),
               ),
-              // Image.asset(Helper.getAssetName("star.png", "virtual"))
             ],
           ),
         ],

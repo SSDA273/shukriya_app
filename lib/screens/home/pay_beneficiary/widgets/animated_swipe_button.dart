@@ -54,13 +54,13 @@ class _AnimatedSwipeToConfirmState extends State<AnimatedSwipeToConfirm> {
               ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 100),
-                width: _dragWidth <= _handleSize ? 44.w : _dragWidth,
+                width: _dragWidth < 41.w ? 41.w : _dragWidth,
                 child: Row(
                   children: [
                     const Expanded(child: SizedBox.shrink()),
                     GestureDetector(
-                        onVerticalDragUpdate: _onDragUpdate,
-                        onVerticalDragEnd: _onDragEnd,
+                        onHorizontalDragUpdate: _onDragUpdate,
+                        onHorizontalDragEnd: _onDragEnd,
                         child: Container(
                             height: 44.h,
                             width: 41.w,
@@ -88,10 +88,12 @@ class _AnimatedSwipeToConfirmState extends State<AnimatedSwipeToConfirm> {
 
   void _onDragUpdate(DragUpdateDetails details) {
     setState(() {
-      _dragValue = (details.globalPosition.dx) / _maxWidth;
-      _dragWidth = _maxWidth * _dragValue;
+      _dragWidth += details.delta.dx;
+      if (_dragWidth < 41.w) _dragWidth = 41.w;
+      if (_dragWidth > _maxWidth) _dragWidth = _maxWidth;
+      _dragValue = _dragWidth / _maxWidth;
     });
-    print(_dragWidth);
+    print("Drag Width: $_dragWidth, Drag Value: $_dragValue");
   }
 
   void _onDragEnd(DragEndDetails details) {

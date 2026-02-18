@@ -207,29 +207,38 @@ class _CustomOTPScreenState extends State<CustomOTPScreen> {
                               });
 
                               FocusManager.instance.primaryFocus?.unfocus();
-                              final data = await otpValidation.validateOTP(
-                                  transactionId: widget.transactionId,
-                                  context: context,
-                                  otpNumber: otpNumber.text);
+                              try {
+                                final data = await otpValidation.validateOTP(
+                                    transactionId: widget.transactionId,
+                                    context: context,
+                                    otpNumber: otpNumber.text);
 
-                              if (data == "Ok") {
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                                // Navigator.pushAndRemoveUntil(
-                                //     context,
-                                //     MaterialPageRoute(builder: (BuildContext context) => widget.nextScreen),
-                                //         (Route<dynamic> route) => route is MainScreen
-                                // );
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            widget.nextScreen));
+                                if (data == "Ok") {
+                                  if (mounted) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                widget.nextScreen));
+                                  }
+                                }
+                              } catch (e) {
+                                print("Error during OTP validation: $e");
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Error: ${e.toString()}"),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
                               }
-                              setState(() {
-                                _isLoading = false;
-                              });
                             },
                             child: Container(
                               height: 46.h,

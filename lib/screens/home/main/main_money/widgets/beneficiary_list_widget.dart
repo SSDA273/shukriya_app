@@ -65,6 +65,13 @@ class BeneficiaryListWidget extends StatelessWidget {
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () {
+                                      if (selectedBeneficiary.getSendAmount <= 0) {
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                          content: Text("Please enter amount then choose beneficiary"),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                        return;
+                                      }
                                       if (selectedBeneficiary
                                               .getBeneficiaryId ==
                                           data.getBeneficiaryModel!

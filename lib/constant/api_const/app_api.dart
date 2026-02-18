@@ -3,7 +3,7 @@ import 'package:unitey_app/core/services/cache_services.dart';
 class AppAPI {
   //UAT
   // static const baseUrl = "https://uat.mercury-pay.me/api";
-  static const gieomUrl = "https://dev.mercury-pay.me/integrations/digital_validator";
+  static const gieomUrl = "http://dev.mercury-pay.me/integrations/digital_validator";
   // static const gieomUrl = "https://digitalvalidator.ai:444";
 
   //Dev

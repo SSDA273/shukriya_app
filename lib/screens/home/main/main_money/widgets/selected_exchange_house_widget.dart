@@ -82,8 +82,7 @@ class SelectedExchangeHouseWidget extends StatelessWidget {
                             color: ColorManager.primary,
                             fontSize: FontSize.s14),
                       ),
-                      feeCalculation.getIsLoading? const
-                      CupertinoActivityIndicator(): Text(
+                      Text(
                         "${selectedBeneficiary.getTransferFee.toStringAsFixed(2)} ${selectedBeneficiary.getFromCountry??"AED"}",
                         style: getBoldStyle(
                             color: ColorManager.black,

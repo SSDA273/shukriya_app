@@ -47,8 +47,19 @@ class _EmiratesUploadScreenState extends State<EmiratesUploadScreen> {
     });
     await context
         .read<GieomTokenNotifier>()
-        .generateGieomToken(context: context).then((_) {
-      Navigator.pop(context);
+        .generateGieomToken(context: context)
+        .catchError((error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to initialize verification: $error"),
+            backgroundColor: ColorManager.red,
+          ),
+        );
+      }
+    })
+        .then((_) {
+      if (mounted) Navigator.pop(context);
     });
   }
 
@@ -139,6 +150,9 @@ class _EmiratesUploadScreenState extends State<EmiratesUploadScreen> {
                           ),
                         ),
                         kSizedW15,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -161,6 +175,20 @@ class _EmiratesUploadScreenState extends State<EmiratesUploadScreen> {
                             ),
                           ],
                         ),
+                        Consumer<GieomTokenNotifier>(
+                          builder: (context, tokenData, _) {
+                            if (tokenData.getGieomToken == null && !tokenData.isLoading) {
+                              return IconButton(
+                                icon: Icon(Icons.refresh, color: ColorManager.primary),
+                                onPressed: () => _asyncMethod(),
+                                tooltip: "Retry initialization",
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ],
+                    ),
                       ],
                     ),
                     kSizedBox25,
@@ -309,36 +337,31 @@ class _EmiratesUploadScreenState extends State<EmiratesUploadScreen> {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  await Provider.of<GieomProcessNotifier>(context,listen: false).processGieom(context: context).then((_) {
-                                     Provider.of<GieomFetchNotifier>(context,listen: false).getDetails(context: context).then((_){
-                                          context.read<GetGieomInstructionNotifier>()
-                                             .getDetails(context: context).then((_){
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
-                                            Navigator.push(context, MaterialPageRoute(
-                                                builder: (context) => const
-                                                    VerificationInfoScreen()));
-                                          });
-
-                                     });
-
-                                  });
-                                  //Todo: Whenever client says they want emirates Id to backend
-                                  // await fileUpload.uploadImage(
-                                  //     context: context,
-                                  //     image: frontImage!,
-                                  //     type: "emirates");
-                                  //
-                                  // await fileUpload.uploadImage(
-                                  //     context: context,
-                                  //     image: backImage!,
-                                  //     type: "emirates");
-
-
-                                  // setState(() {
-                                  //   _isLoading = false;
-                                  // });
+                                  try {
+                                    await Provider.of<GieomProcessNotifier>(context, listen: false).processGieom(context: context);
+                                    await Provider.of<GieomFetchNotifier>(context, listen: false).getDetails(context: context);
+                                    await context.read<GetGieomInstructionNotifier>().getDetails(context: context);
+                                    
+                                    if (mounted) {
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (context) => const VerificationInfoScreen()));
+                                    }
+                                  } catch (e) {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("Error: $e"),
+                                          backgroundColor: ColorManager.red,
+                                        ),
+                                      );
+                                    }
+                                  } finally {
+                                    if (mounted) {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    }
+                                  }
                                 }else{
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please upload two side of your emirates id"),backgroundColor: ColorManager.red,));
                                 }

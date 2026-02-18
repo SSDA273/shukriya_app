@@ -349,31 +349,46 @@ class CurrencySelectionWidget extends HookWidget {
                         FocusManager.instance.primaryFocus!.unfocus();
                         sendMoneyController.text=amountFormatter.format(double.parse(sendMoneyController.text));
                       },
-                      onChanged: (value) async{
-                        receiveMoneyController.clear();
+                      onChanged: (value) async {
                         if (value.isNotEmpty) {
-                          selectedBeneficiary.beneficiaryAmountCalculation(
-                            double.parse(value),
-                            getExchangesNotifier.getProductModel!,
-                          );
-                          await feeCalculation.getRemittanceFee(context: context,
-                              feeFxId: selectedBeneficiary.getFeeFxID!,
-                              amount: selectedBeneficiary.getSendAmount,
-                              commissionType:"customer");
-                          selectedBeneficiary.setReceiveAmount=double.parse(feeCalculation.getTotalFee);
-                          selectedBeneficiary.setTransferFee =double.parse(feeCalculation.getTotalFee);
-                          receiveMoneyController.text = amountFormatter.format(selectedBeneficiary.getReceiveAmount);
-                        }else{
-                          receiveMoneyController.text="0.00";
-                          selectedBeneficiary.setTransferFee =0.00;
+                          double amount = double.tryParse(value) ?? 0.0;
+                          if (getExchangesNotifier.getProductModel != null) {
+                            selectedBeneficiary.beneficiaryAmountCalculation(
+                              amount,
+                              getExchangesNotifier.getProductModel!,
+                            );
+                            
+                            // Preliminary calculation for real-time update
+                            double preliminaryReceiveAmount = (amount - selectedBeneficiary.getTransferFee) * selectedBeneficiary.getExchangeRate;
+                            receiveMoneyController.text = amountFormatter.format(preliminaryReceiveAmount);
+
+                            try {
+                              await feeCalculation.getRemittanceFee(
+                                context: context,
+                                feeFxId: selectedBeneficiary.getFeeFxID ?? "",
+                                amount: selectedBeneficiary.getSendAmount,
+                                commissionType: "customer",
+                                fromCurrency: getExchangesNotifier.getExchangeHouseModel?.result?[0].products?[0].fee?.fromCurrency ?? "AED",
+                                toCurrency: getExchangesNotifier.getExchangeHouseModel?.result?[0].products?[0].fee?.toCurrency ?? "INR",
+                                serviceId: selectedBeneficiary.getServiceID ?? "",
+                                toCountry: selectedBeneficiary.getToCountry ?? "IN",
+                              );
+
+                              double fee = double.tryParse(feeCalculation.getTotalFee) ?? 0.0;
+                              selectedBeneficiary.setReceiveAmount = fee;
+                              selectedBeneficiary.setTransferFee = fee;
+                              
+                              // Update with final amount after fee deduction if that's the logic
+                              receiveMoneyController.text = amountFormatter.format(selectedBeneficiary.getReceiveAmount);
+                            } catch (e) {
+                              print("Fee calculation error: $e");
+                              // Keep the preliminary amount if fee calculation fails
+                            }
+                          }
+                        } else {
+                          receiveMoneyController.text = "0.00";
+                          selectedBeneficiary.setTransferFee = 0.00;
                         }
-                        // if (selectedBeneficiary.getReceiveAmount <= 0) {
-                        //   receiveMoneyController.text = "";
-                        // } else {
-                        //   receiveMoneyController.text = selectedBeneficiary
-                        //       .getReceiveAmount
-                        //       .toStringAsFixed(2);
-                        // }
                       },
 
                       prefix: Padding(

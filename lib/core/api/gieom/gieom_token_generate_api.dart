@@ -20,6 +20,8 @@ class GieomTokenGenerateAPI {
     final body = response.data;
     if (statusCode == 201 || statusCode == 200) {
       return body;
+    } else {
+      throw "Server returned $statusCode: ${response.statusMessage}";
     }
   }
 }

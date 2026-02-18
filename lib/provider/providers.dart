@@ -40,6 +40,7 @@ import 'package:unitey_app/core/notifier/remittance/currency_list_notifier.dart'
 import 'package:unitey_app/core/notifier/remittance/exchange_house_list_provider.dart';
 import 'package:unitey_app/core/notifier/otp_generate_notifier.dart';
 import 'package:unitey_app/core/notifier/otp_validation_notifier.dart';
+import 'package:unitey_app/core/notifier/transaction_notifier.dart';
 import 'package:unitey_app/screens/auth/signup/time_provider.dart';
 import '../core/notifier/auth/forgot/forgot_otp_verify_notifier.dart';
 import '../core/notifier/remittance/fee_calculation_notifier.dart';
@@ -113,4 +114,5 @@ List<SingleChildWidget> remoteProvider = [
 
   ChangeNotifierProvider(create: (_) => EmiratesIdNotifier()),
   ChangeNotifierProvider(create: (_) => SignUpOTPValidationNotifier()),
+  ChangeNotifierProvider(create: (_) => TransactionNotifier()),
 ];

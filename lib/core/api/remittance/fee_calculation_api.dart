@@ -9,7 +9,11 @@ class FeeCalculationAPI {
   Future getTotalRemittanceFee({
     required String feeFxId,
     required num amount,
-    required String commissionType //customer or agent
+    required String commissionType, //customer or agent
+    required String fromCurrency,
+    required String toCurrency,
+    required String serviceId,
+    required String toCountry,
   }) async {
     const String subUrl = "/remittance/fees-calculation";
     const String uri = AppAPI.baseUrl + subUrl;
@@ -17,8 +21,12 @@ class FeeCalculationAPI {
       "entity_id": GlobalData.entityId,
       "entity_key": GlobalData.entityKey,
       "debit_amount": amount,
-      "fee_fx_id":feeFxId,
-      "type": commissionType
+      "fee_fx_id": feeFxId,
+      "type": commissionType,
+      "from_currency": fromCurrency,
+      "to_currency": toCurrency,
+      "serviceid": serviceId,
+      "to_country": toCountry,
     });
     final response = await Api().dio.post(
       uri,

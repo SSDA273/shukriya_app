@@ -13,9 +13,18 @@ bool get getIsValidated => _isValidated;
     required String base64Image,
   }) async {
     try {
-      final userToken=context.read<GieomTokenNotifier>().getGieomToken;
-      // print("userToken $userToken");
-      final otpData = await _uploadFrontAPI.uploadFrontImage(userToken: userToken!, base64Image: base64Image);
+      final userToken = context.read<GieomTokenNotifier>().getGieomToken;
+      if (userToken == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Session expired or invalid. Please restart the process."),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      final otpData = await _uploadFrontAPI.uploadFrontImage(
+          userToken: userToken, base64Image: base64Image);
       final message = otpData['message'];
       if (message == "Success") {
         _isValidated= true;

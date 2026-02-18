@@ -24,6 +24,8 @@ class GieomTokenNotifier extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     } catch(error){
+      isLoading = false;
+      notifyListeners();
       rethrow;
     }
   }
