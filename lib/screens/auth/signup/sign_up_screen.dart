@@ -183,10 +183,8 @@ class SignupScreen extends HookWidget {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter username';
-                              } else if (value.length < 6) {
-                                return 'username must be more than 6 characters';
-                              }else if(value.length>12){
-                                return 'username must be less than 12 characters';
+                              } else if (value.length < 3) {
+                                return 'username must be more than 3 characters';
                               }
                               return null;
                             },
@@ -224,10 +222,8 @@ class SignupScreen extends HookWidget {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter userId';
-                              } else if (value.length < 6) {
-                                return 'userId must be more than 6 characters';
-                              }else if(value.length>12){
-                                return 'userId must be less than 12 characters';
+                              } else if (value.length < 3) {
+                                return 'userId must be more than 3 characters';
                               }
                               return null;
                             },

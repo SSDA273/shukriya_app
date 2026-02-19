@@ -311,7 +311,7 @@ class _EmiratesUploadScreenState extends State<EmiratesUploadScreen> {
                                  CircularIndicatorWidget(),
                                 kSizedBox5,
                                 Text(
-                                    "Please wait unlit the processing finish..")
+                                    "Please wait until the processing finish..")
                               ],
                             )
                           : ButtonWidget(

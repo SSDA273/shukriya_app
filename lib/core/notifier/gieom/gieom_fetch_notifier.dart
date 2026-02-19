@@ -34,13 +34,13 @@ class GieomFetchNotifier extends ChangeNotifier {
       }
       isLoading = false;
       notifyListeners();
-    } catch(error){
+    } catch (error) {
       // Provide dummy data for demo purposes if API fails
-      _userName = "John Doe";
-      _dob = "1990-01-01";
-      _cardNo = "784-1990-1234567-1";
-      _emiratesId = "800123456789";
-      _nationality = "United Arab Emirates";
+      _userName = "Vinay Madan Chamba Ram Madan";
+      _dob = "1972-01-01";
+      _cardNo = "784-1972-6012965-1";
+      _emiratesId = "784-1972-6012965-1";
+      _nationality = "Indian";
       print("Gieom Fetch API Failed. Using Mock Data for demo.");
       isLoading = false;
       notifyListeners();

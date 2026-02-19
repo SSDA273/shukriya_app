@@ -4,6 +4,10 @@ class GlobalData {
   // static const String entityKey = "12345678901234567890";
   static const String entityKey = "ENT-5678901234567890";
 
+  // static const String entityId = "61e3badbdf3ceff3769ebf97"; //rahul
+  // static const String entityKey = "ENT-5678901234567890";
+
+
   // static const String entityId = "61e7d0a7bc62f738704bf584";
   // static const String entityKey = "ENT23342342";
 

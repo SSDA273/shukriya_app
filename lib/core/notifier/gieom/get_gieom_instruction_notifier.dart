@@ -24,8 +24,9 @@ class GetGieomInstructionNotifier extends ChangeNotifier {
     } catch(error){
       // Provide dummy instructions for demo purposes if API fails
       _instructionData = {
-        "status": "Success",
-        "instructions": "Please verify your details below."
+        "eye-blinks": ["2", "5"],
+        "head-left-tilt": ["8", "11"],
+        "head-right-tilt": ["13", "14"]
       };
       print("Gieom Instruction API Failed. Using Mock Data for demo.");
       notifyListeners();

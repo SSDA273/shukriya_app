@@ -45,14 +45,23 @@ class VerificationInfoScreen extends HookWidget {
                             "https://thumbs.dreamstime.com/b/id-card-icon-vector-identity-tag-vector-illustration-symbol-driver-licence-logo-id-card-icon-vector-identity-tag-vector-152536266.jpg"))
                     : Column(
                         children: [
-                          const Icon(
-                            Icons.verified_user,
+                          Icon(
+                            (liveness.value == 'Success' &&
+                                    faceMatch.value == 'Success')
+                                ? Icons.verified_user
+                                : Icons.security,
                             size: 150,
-                            color: Colors.green,
+                            color: (liveness.value == 'Success' &&
+                                    faceMatch.value == 'Success')
+                                ? Colors.green
+                                : ColorManager.primary,
                           ),
                           kSizedBox10,
                           Text(
-                            "Verification Completed",
+                            (liveness.value == 'Success' &&
+                                    faceMatch.value == 'Success')
+                                ? "Verification Completed"
+                                : "Verifying Identity...",
                             style: getBoldStyle(
                                 color: ColorManager.black,
                                 fontSize: FontSize.s24),

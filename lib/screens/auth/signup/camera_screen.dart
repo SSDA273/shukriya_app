@@ -75,65 +75,85 @@ class _CameraScreenState extends State<CameraScreen> {
         child: Column(
           children: [
             Container(
-              height: 50.h,
-              padding: EdgeInsets.symmetric(horizontal: AppPadding.p24),
+              height: 100.h,
+              padding: EdgeInsets.symmetric(horizontal: AppPadding.p16),
               decoration: BoxDecoration(color: ColorManager.primary),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Stack(
                 children: [
-                  InkWell(
-                    onTap: () async {
-                      if (isVideoStart) {
-                        timer.cancel();
-                        await stopVideoRecording();
-                        Navigator.pop(context);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text(
-                      "BACK",
-                      style: getSemiBoldStyle(color: ColorManager.white),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () async {
+                        if (isVideoStart) {
+                          timer.cancel();
+                          await stopVideoRecording();
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "BACK",
+                          style: getSemiBoldStyle(color: ColorManager.white),
+                        ),
+                      ),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                        color: isVideoStart
-                            ? ColorManager.red
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(
-                      "00:$secondsRemaining",
-                      style: getSemiBoldStyle(color: ColorManager.white),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          isVideoStart ? message : "Ready to Start",
+                          style: getSemiBoldStyle(
+                              color: ColorManager.white,
+                              fontSize: isVideoStart ? FontSize.s22 : FontSize.s18),
+                        ),
+                        if (isVideoStart) kSizedBox5,
+                        if (isVideoStart)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: ColorManager.red,
+                                borderRadius: BorderRadius.circular(4)),
+                            child: Text(
+                              "00:${secondsRemaining.toString().padLeft(2, '0')}",
+                              style:
+                                  getSemiBoldStyle(color: ColorManager.white),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height/2,
-              width: double.infinity,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: ColorManager.white,
-                borderRadius: BorderRadius.all(Radius.circular(22)),
-                // borderRadius: BorderRadius.only(topLeft: Radius.circular(22),topRight: Radius.circular(22))
-              ),
-              child: CameraPreview(
-                controller,
-                child: isVideoStart
-                    ? null
-                    : Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          // padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              color: Colors.white12,
-                              borderRadius: BorderRadius.circular(12)),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: ColorManager.white,
+                  borderRadius: BorderRadius.all(Radius.circular(22)),
+                ),
+                child: CameraPreview(
+                  controller,
+                  child: isVideoStart
+                      ? null
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            decoration: BoxDecoration(
+                                color: Colors.white12,
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
                         ),
-                      ),
+                ),
               ),
             ),
             kSizedBox20,
@@ -153,82 +173,76 @@ class _CameraScreenState extends State<CameraScreen> {
                 : kSizedBox,
             Container(
               height: 80.h,
-              padding:const EdgeInsets.symmetric(horizontal: AppPadding.p16),
+              padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
               decoration: BoxDecoration(color: ColorManager.primary),
               child: Center(
                 child: isVideoStart
-                    ? Text(
-                        message,
-                        style: getSemiBoldStyle(
-                            color: ColorManager.white, fontSize: FontSize.s22),
-                      )
+                    ? const SizedBox.shrink()
                     : InkWell(
                         onTap: () async {
                           if (isVideoStart == false) {
                             startVideoRecording();
                             setState(() {
                               isVideoStart = true;
+                              secondsRemaining = 0;
+                              message = "Steady...";
                             });
+
+                            // Prepare instructions
+                            newData = [];
+                            if (gieomInstruction != null) {
+                              gieomInstruction.forEach((key, value) {
+                                for (var element in value) {
+                                  newData.add({
+                                    "time": int.parse(element),
+                                    "event": key
+                                  });
+                                }
+                              });
+                              newData.sort(
+                                  (a, b) => a["time"].compareTo(b["time"]));
+                            }
+
                             timer = Timer.periodic(const Duration(seconds: 1),
                                 (_) async {
-                              if (secondsRemaining != 15) {
+                              if (secondsRemaining < 15) {
                                 setState(() {
                                   secondsRemaining++;
                                 });
 
-                                newData = [];
-                                gieomInstruction!.forEach((key, value) {
-                                  for (var element in value) {
-                                    newData.add({"time": int.parse(element), "event": key});
-                                  }
-                                });
-                                newData.sort((a, b) => a["time"].compareTo(b["time"]));
+                                // Check for matches at the current time
+                                final matches = newData
+                                    .where((e) => e['time'] == secondsRemaining)
+                                    .toList();
 
-                                List timeArray = newData.map((e){
-                                  return e['time'];
-                                }).toList();
-
-                                if(timeArray.contains(secondsRemaining+1)){
-
-                                  print("Displayed Seconds $secondsRemaining");
-                                  var timeIndex = timeArray.indexOf(secondsRemaining+1);
-                                  var element = newData[timeIndex];
-                                  if (element['time'] == secondsRemaining+1) {
-
-                                    if (element['event'] == 'eye-blinks') {
-                                      setState(() {
-                                        message = "Eye Blink";
-                                      });
-                                    } else if (element['event'] == 'head-left-tilt') {
-                                      setState(() {
-                                        message = "Move Head Left";
-                                      });
-                                    } else if(element['event'] == 'head-right-tilt'){
-                                      setState(() {
-                                        message = "Move Head Right";
-                                      });
-                                    }
-                                  }
-                                }else{
+                                if (matches.isNotEmpty) {
+                                  final element = matches.first;
+                                  print(
+                                      "Instruction triggered: ${element['event']} at $secondsRemaining");
                                   setState(() {
-                                    message = "No Message";
+                                    if (element['event'] == 'eye-blinks') {
+                                      message = "Eye Blink";
+                                    } else if (element['event'] ==
+                                        'head-left-tilt') {
+                                      message = "Move Head Left";
+                                    } else if (element['event'] ==
+                                        'head-right-tilt') {
+                                      message = "Move Head Right";
+                                    }
                                   });
                                 }
                               } else {
                                 timer.cancel();
-                                await stopVideoRecording().then((value){
+                                await stopVideoRecording().then((value) {
                                   videoFile = value;
                                   Navigator.pop(context, videoFile);
                                 });
                               }
                             });
-                          } else {
-                            print("sss");
                           }
-                          // controller.startVideoRecording();
                         },
                         child: Container(
-                          padding:const EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: AppPadding.p8,
                               horizontal: AppPadding.p12),
                           decoration: BoxDecoration(
